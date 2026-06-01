@@ -1,0 +1,302 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Advanced — SystemCraft</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;1,9..40,300&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root{--bg:#0a0a0f;--bg2:#111118;--bg3:#1a1a25;--card:#13131e;--border:rgba(255,255,255,0.07);--accent:#6c63ff;--accent2:#00d4aa;--accent3:#ff6b6b;--gold:#f5c842;--text:#e8e8f0;--muted:#888899;--dim:#444458;}
+  *{margin:0;padding:0;box-sizing:border-box;}html{scroll-behavior:smooth;}
+  body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);line-height:1.6;}
+  nav{position:fixed;top:0;left:0;right:0;z-index:100;background:rgba(10,10,15,0.92);backdrop-filter:blur(16px);border-bottom:1px solid var(--border);padding:0 2rem;display:flex;align-items:center;justify-content:space-between;height:60px;}
+  .logo{font-family:'Syne',sans-serif;font-weight:800;font-size:1.3rem;color:#fff;text-decoration:none;}
+  .logo span{color:var(--accent);}
+  .nav-links{display:flex;gap:0.25rem;}
+  .nav-links a{color:var(--muted);text-decoration:none;font-size:0.85rem;font-weight:500;padding:0.4rem 0.75rem;border-radius:6px;transition:all 0.2s;}
+  .nav-links a:hover,.nav-links a.active{color:#fff;background:rgba(255,255,255,0.06);}
+  .nav-cta{background:var(--accent);color:#fff;padding:0.4rem 1rem;border-radius:6px;text-decoration:none;font-size:0.85rem;font-weight:600;}
+  .page-wrap{display:grid;grid-template-columns:240px 1fr;min-height:100vh;padding-top:60px;}
+  .sidebar{position:sticky;top:60px;height:calc(100vh - 60px);overflow-y:auto;border-right:1px solid var(--border);padding:1.5rem 1rem;background:var(--bg2);}
+  .sidebar-label{font-size:0.7rem;font-weight:700;color:var(--dim);letter-spacing:1.5px;text-transform:uppercase;padding:0 0.5rem;margin-bottom:0.5rem;margin-top:1rem;}
+  .sidebar-label:first-child{margin-top:0;}
+  .sidebar a{display:block;padding:0.4rem 0.5rem;font-size:0.83rem;color:var(--muted);text-decoration:none;border-radius:6px;transition:all 0.15s;}
+  .sidebar a:hover{color:#fff;background:rgba(255,255,255,0.05);}
+  .sidebar a.active{color:#fff;background:rgba(255,107,107,0.12);font-weight:500;}
+  .content{padding:3rem 4rem;max-width:800px;}
+  .page-badge{display:inline-flex;align-items:center;gap:6px;background:rgba(255,107,107,0.1);border:1px solid rgba(255,107,107,0.25);color:var(--accent3);padding:0.3rem 0.8rem;border-radius:100px;font-size:0.78rem;font-weight:500;margin-bottom:1.5rem;}
+  h1{font-family:'Syne',sans-serif;font-weight:800;font-size:2.4rem;color:#fff;letter-spacing:-1.5px;line-height:1.1;margin-bottom:0.75rem;}
+  .intro{font-size:1.05rem;color:var(--muted);line-height:1.75;margin-bottom:2.5rem;max-width:640px;}
+  h2{font-family:'Syne',sans-serif;font-weight:700;font-size:1.5rem;color:#fff;letter-spacing:-0.5px;margin:2.5rem 0 1rem;padding-top:1rem;border-top:1px solid var(--border);}
+  h2:first-of-type{border-top:none;margin-top:0;}
+  h3{font-family:'Syne',sans-serif;font-weight:600;font-size:1.05rem;color:#fff;margin:1.5rem 0 0.5rem;}
+  p{color:var(--muted);line-height:1.75;margin-bottom:1rem;font-size:0.93rem;}
+  strong{color:var(--text);}
+  ul,ol{color:var(--muted);font-size:0.9rem;line-height:2;padding-left:1.5rem;margin-bottom:1rem;}
+  .highlight{background:var(--bg3);border-left:3px solid var(--accent);border-radius:0 8px 8px 0;padding:1rem 1.25rem;margin:1.25rem 0;font-size:0.875rem;color:var(--text);}
+  .highlight strong{color:var(--accent);}
+  .tip{background:rgba(0,212,170,0.06);border-left:3px solid var(--accent2);border-radius:0 8px 8px 0;padding:1rem 1.25rem;margin:1.25rem 0;font-size:0.875rem;color:var(--text);}
+  .tip strong{color:var(--accent2);}
+  .warn{background:rgba(245,200,66,0.06);border-left:3px solid var(--gold);border-radius:0 8px 8px 0;padding:1rem 1.25rem;margin:1.25rem 0;font-size:0.875rem;color:var(--text);}
+  .warn strong{color:var(--gold);}
+  .interview{background:rgba(255,107,107,0.06);border-left:3px solid var(--accent3);border-radius:0 8px 8px 0;padding:1rem 1.25rem;margin:1.25rem 0;font-size:0.875rem;}
+  .interview strong{color:var(--accent3);display:block;margin-bottom:0.25rem;font-size:0.75rem;letter-spacing:1px;text-transform:uppercase;}
+  code{font-family:'DM Mono',monospace;background:rgba(255,255,255,0.07);padding:0.15rem 0.4rem;border-radius:4px;font-size:0.83rem;color:var(--accent2);}
+  .compare{display:grid;grid-template-columns:1fr 1fr;gap:1rem;margin:1.25rem 0;}
+  .compare-box{background:var(--card);border:1px solid var(--border);border-radius:10px;padding:1.25rem;}
+  .compare-box h4{font-family:'Syne',sans-serif;font-size:0.9rem;font-weight:700;margin-bottom:0.75rem;}
+  .compare-box ul{list-style:none;padding:0;margin:0;}
+  .compare-box ul li{font-size:0.82rem;color:var(--muted);padding:0.3rem 0;display:flex;gap:0.5rem;}
+  .pro::before{content:'✓';color:var(--accent2);}
+  .con::before{content:'✗';color:var(--accent3);}
+  .example-box{background:var(--bg3);border:1px solid var(--border);border-radius:10px;padding:1.5rem;margin:1.25rem 0;}
+  .example-box .ex-label{font-size:0.7rem;font-weight:700;color:var(--accent3);letter-spacing:1.5px;text-transform:uppercase;margin-bottom:0.75rem;}
+  .example-box h4{font-family:'Syne',sans-serif;font-size:1rem;font-weight:700;color:#fff;margin-bottom:0.5rem;}
+  .example-box p{font-size:0.83rem;margin-bottom:0;}
+  .flow{background:var(--card);border:1px solid var(--border);border-radius:10px;padding:1.25rem;margin:1.25rem 0;font-family:'DM Mono',monospace;font-size:0.78rem;color:var(--muted);line-height:1.9;}
+  .flow span{color:var(--accent2);}
+  .nav-bottom{display:flex;justify-content:space-between;align-items:center;margin-top:3rem;padding-top:2rem;border-top:1px solid var(--border);}
+  .nav-btn{display:inline-flex;align-items:center;gap:0.5rem;padding:0.6rem 1.1rem;border-radius:8px;font-size:0.85rem;font-weight:600;text-decoration:none;border:1px solid var(--border);color:var(--muted);transition:all 0.2s;}
+  .nav-btn:hover{color:#fff;border-color:rgba(255,255,255,0.2);}
+  .nav-btn.next{background:var(--accent);border-color:var(--accent);color:#fff;}
+  .nav-btn.next:hover{background:#7a72ff;}
+  @media(max-width:900px){.page-wrap{grid-template-columns:1fr;}.sidebar{display:none;}.content{padding:2rem 1.5rem;}.compare{grid-template-columns:1fr;}}
+</style>
+</head>
+<body>
+<nav>
+  <a class="logo" href="index.html">System<span>Craft</span></a>
+  <div class="nav-links">
+    <a href="index.html">Home</a>
+    <a href="fundamentals.html">Fundamentals</a>
+    <a href="components.html">Components</a>
+    <a href="patterns.html">Patterns</a>
+    <a href="advanced.html" class="active">Advanced</a>
+    <a href="interview.html">Interview Prep</a>
+    <a href="cheatsheet.html">Cheatsheet</a>
+  </div>
+  <a class="nav-cta" href="interview.html">Interview Prep →</a>
+</nav>
+
+<div class="page-wrap">
+  <aside class="sidebar">
+    <div class="sidebar-label">Module 4</div>
+    <a href="#microservices" class="active">Microservices</a>
+    <a href="#api-gateway">API Gateway</a>
+    <a href="#service-mesh">Service Mesh</a>
+    <a href="#event-sourcing">Event Sourcing</a>
+    <a href="#cqrs">CQRS</a>
+    <a href="#saga">Saga Pattern</a>
+    <a href="#consensus">Consensus (Raft)</a>
+    <a href="#distributed-locks">Distributed Locks</a>
+    <a href="#geo">Geo-Distribution</a>
+    <a href="#observability">Observability</a>
+  </aside>
+
+  <main class="content">
+    <div class="page-badge">🚀 Module 4 · Advanced</div>
+    <h1>Advanced Distributed Systems</h1>
+    <p class="intro">This module is for senior and staff-level interviews, or anyone designing large-scale distributed systems. These patterns appear at companies like Google, Netflix, Amazon, and Uber.</p>
+
+    <!-- MICROSERVICES -->
+    <h2 id="microservices">Microservices vs Monolith</h2>
+    <p>A monolith is a single deployable unit with all functionality. Microservices split functionality into independent services that communicate over a network.</p>
+
+    <div class="compare">
+      <div class="compare-box">
+        <h4 style="color:var(--accent)">Monolith</h4>
+        <ul>
+          <li class="pro">Simple to develop & deploy initially</li>
+          <li class="pro">Easy debugging (single process)</li>
+          <li class="pro">No network overhead between components</li>
+          <li class="con">Scales as one unit (can't scale just one part)</li>
+          <li class="con">Deploy everything for any change</li>
+          <li class="con">Tech stack locked for whole app</li>
+        </ul>
+      </div>
+      <div class="compare-box">
+        <h4 style="color:var(--accent2)">Microservices</h4>
+        <ul>
+          <li class="pro">Independent scaling of each service</li>
+          <li class="pro">Independent deployment</li>
+          <li class="pro">Fault isolation</li>
+          <li class="con">Network complexity between services</li>
+          <li class="con">Distributed tracing needed</li>
+          <li class="con">Operational overhead (many services)</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="highlight">
+      <strong>When to use microservices:</strong> When different components have very different scaling needs, different teams own different parts, or you need independent deployment velocity. Netflix, Amazon, Uber all moved to microservices after starting as monoliths.
+    </div>
+
+    <div class="warn">
+      <strong>Martin Fowler's rule:</strong> "Don't start with microservices." Start with a modular monolith. Extract services when you have a clear reason. Premature microservices add complexity without benefit.
+    </div>
+
+    <!-- API GATEWAY -->
+    <h2 id="api-gateway">API Gateway</h2>
+    <p>An API gateway is the single entry point for all clients. It routes requests to the appropriate microservice, handling cross-cutting concerns.</p>
+
+    <p><strong>What an API gateway does:</strong></p>
+    <ul>
+      <li>Request routing to microservices</li>
+      <li>Authentication & authorization (verify JWT token once, not in every service)</li>
+      <li>Rate limiting</li>
+      <li>SSL termination</li>
+      <li>Request/response transformation</li>
+      <li>Load balancing</li>
+      <li>Logging and metrics</li>
+    </ul>
+
+    <div class="example-box">
+      <div class="ex-label">Real World</div>
+      <h4>Common API Gateways</h4>
+      <p>AWS API Gateway, Kong, NGINX, Traefik, Envoy (at the service level). Netflix uses Zuul (open-sourced) as their API gateway. If you're on AWS, API Gateway + Lambda is a serverless alternative.</p>
+    </div>
+
+    <!-- SERVICE MESH -->
+    <h2 id="service-mesh">Service Mesh</h2>
+    <p>In a microservices system with hundreds of services, handling communication (retries, timeouts, circuit breaking, mTLS, observability) in each service is hard. A service mesh moves this to the infrastructure layer.</p>
+
+    <p>A sidecar proxy (like Envoy) is injected alongside each service container. All network traffic goes through the sidecar. The mesh control plane configures all sidecars centrally.</p>
+
+    <p><strong>What you get:</strong> Automatic mTLS between services, distributed tracing, circuit breaking, retries, traffic management — all without changing application code.</p>
+    <p><strong>Popular options:</strong> Istio, Linkerd, Consul Connect, AWS App Mesh.</p>
+
+    <!-- EVENT SOURCING -->
+    <h2 id="event-sourcing">Event Sourcing</h2>
+    <p>Instead of storing current state, event sourcing stores the sequence of events that led to the current state. The current state is derived by replaying events.</p>
+
+    <div class="highlight">
+      <strong>Bank account analogy:</strong> Normal DB stores current balance ($500). Event sourcing stores: deposited $1000, withdrew $300, deposited $200, withdrew $400. Current state = replay of events.
+    </div>
+
+    <p><strong>Benefits:</strong></p>
+    <ul>
+      <li>Full audit log baked in by design</li>
+      <li>Reconstruct state at any point in time ("what was the balance on March 15?")</li>
+      <li>Temporal decoupling — events can be processed by multiple consumers asynchronously</li>
+      <li>Easy to add new projections (new views of data from same events)</li>
+    </ul>
+
+    <p><strong>Challenges:</strong> Event schema evolution (old events with new code). Eventually consistent read models. Higher complexity. Storage grows over time (use snapshots to optimize).</p>
+
+    <!-- CQRS -->
+    <h2 id="cqrs">CQRS — Command Query Responsibility Segregation</h2>
+    <p>CQRS separates the read model from the write model. Write operations (commands) go to one model optimized for writes. Read operations (queries) go to a different model optimized for reads.</p>
+
+    <div class="flow">
+      <span>Write side:</span>  POST /order → Command Handler → Write DB (normalized) → emit event<br>
+      <span>Event:</span>       OrderCreated → Event Bus (Kafka) → Read Model Updater<br>
+      <span>Read side:</span>   GET /orders → Query Handler → Read DB (denormalized, fast)
+    </div>
+
+    <p>The read model is often denormalized (pre-joined) for fast queries. It's eventually consistent with the write model.</p>
+
+    <div class="tip">
+      <strong>Common pairing:</strong> CQRS + Event Sourcing. Commands create events. Events rebuild the read model. Used by financial systems, e-commerce orders, booking systems.
+    </div>
+
+    <!-- SAGA -->
+    <h2 id="saga">Saga Pattern — Distributed Transactions</h2>
+    <p>In microservices, you can't use a single database transaction spanning multiple services. The Saga pattern solves distributed transactions through a sequence of local transactions with compensating actions on failure.</p>
+
+    <h3>Choreography-based Saga</h3>
+    <p>Each service publishes events. Other services subscribe and react. No central coordinator.</p>
+    <p>✅ Decoupled ❌ Hard to follow the flow, complex to debug</p>
+
+    <h3>Orchestration-based Saga</h3>
+    <p>A central orchestrator tells each service what to do. If a step fails, the orchestrator triggers compensating transactions to undo previous steps.</p>
+    <p>✅ Clear flow, easy to monitor ❌ Orchestrator becomes a bottleneck/single point</p>
+
+    <div class="example-box">
+      <div class="ex-label">Real Example · E-commerce Order</div>
+      <h4>Order placement as a saga</h4>
+      <p>
+        1. Order Service → creates order (local txn)<br>
+        2. Payment Service → charges card<br>
+        3. Inventory Service → reserves items<br>
+        4. Shipping Service → creates shipment<br>
+        <br>
+        If step 3 fails (out of stock): compensating txns run — refund payment, cancel order. Each service handles rollback of its own step.
+      </p>
+    </div>
+
+    <!-- CONSENSUS -->
+    <h2 id="consensus">Consensus — Raft Algorithm</h2>
+    <p>How do distributed nodes agree on a value when any of them can fail? This is the consensus problem. Raft is the most understandable consensus algorithm (designed to be more understandable than Paxos).</p>
+
+    <h3>Raft in a nutshell</h3>
+    <p><strong>Leader Election:</strong> One node is elected leader. Followers send votes. Majority wins.<br>
+    <strong>Log Replication:</strong> All writes go to leader. Leader replicates to followers. Committed when majority acknowledge.<br>
+    <strong>Safety:</strong> A new leader is always up-to-date (has all committed entries).</p>
+
+    <p>Used by: etcd (Kubernetes), CockroachDB, TiKV, Consul, InfluxDB clusters.</p>
+
+    <!-- DISTRIBUTED LOCKS -->
+    <h2 id="distributed-locks">Distributed Locks</h2>
+    <p>When multiple instances of a service need to coordinate access to a shared resource, distributed locks ensure only one instance acts at a time.</p>
+
+    <p><strong>Using Redis:</strong> <code>SET resource_lock unique_id NX PX 30000</code> — Set only if Not eXists, expire in 30 seconds. Release by checking the value matches and then deleting (atomic with Lua script).</p>
+
+    <p><strong>Redlock:</strong> Redis's multi-node distributed lock algorithm. Acquires lock on majority of N Redis nodes. More resilient than single-node.</p>
+
+    <div class="warn">
+      <strong>Caution:</strong> Distributed locks are tricky. Clock skew, GC pauses, and network delays can all cause a lock to expire while the holder is still working. For critical sections, consider database-level locking or stronger consensus (Zookeeper ZNodes).
+    </div>
+
+    <!-- GEO -->
+    <h2 id="geo">Geo-Distribution & Multi-Region</h2>
+    <p>Serving users globally requires placing infrastructure in multiple regions. This introduces the hardest distributed systems challenges.</p>
+
+    <p><strong>Active-Passive:</strong> One region handles all writes. Others are read replicas. Simple but still requires cross-region writes for some users. Failover takes time (RPO/RTO).</p>
+    <p><strong>Active-Active:</strong> All regions accept writes. Data must be replicated between regions. Conflict resolution is hard. Used by: DynamoDB Global Tables, CockroachDB, Spanner.</p>
+
+    <div class="example-box">
+      <div class="ex-label">Real Example · Google Spanner</div>
+      <h4>Globally distributed SQL with external consistency</h4>
+      <p>Spanner achieves external consistency (stronger than serializability) across global datacenters using atomic clocks and GPS receivers (TrueTime API). Transactions are timestamped with guaranteed accuracy bounds. This lets Spanner wait out clock uncertainty and provide correct global ordering — something previously thought impossible with SQL at scale.</p>
+    </div>
+
+    <!-- OBSERVABILITY -->
+    <h2 id="observability">Observability — Metrics, Logs, Traces</h2>
+    <p>In distributed systems, you can't just SSH into one machine to debug. Observability is the ability to understand the system's internal state from its external outputs.</p>
+
+    <p><strong>Metrics</strong> — Numeric data over time. CPU usage, request rate, error rate, latency percentiles. Stored in time-series DB (Prometheus, InfluxDB). Visualized in Grafana.</p>
+    <p><strong>Logs</strong> — Structured events from each service. Aggregated centrally (ELK stack, Splunk, Datadog). Good for debugging specific errors.</p>
+    <p><strong>Traces</strong> — Track a single request as it flows through multiple services. Shows exactly where time was spent and where errors occurred. Tools: Jaeger, Zipkin, AWS X-Ray, Datadog APM.</p>
+
+    <div class="highlight">
+      <strong>The three pillars:</strong> Metrics tell you something is wrong. Logs tell you what happened. Traces tell you where it happened. You need all three at scale.
+    </div>
+
+    <div class="nav-bottom">
+      <a href="patterns.html" class="nav-btn">← Patterns</a>
+      <a href="interview.html" class="nav-btn next">Next: Interview Prep →</a>
+    </div>
+  </main>
+</div>
+
+
+<footer style="border-top:1px solid var(--border);padding:1.5rem 2rem;text-align:center;color:var(--dim);font-size:0.8rem;margin-top:2rem;">
+  <p>SystemCraft &nbsp;&middot;&nbsp; <a href="index.html" style="color:var(--muted);text-decoration:none;">Home</a> &nbsp;&middot;&nbsp; <a href="fundamentals.html" style="color:var(--muted);text-decoration:none;">Fundamentals</a> &nbsp;&middot;&nbsp; <a href="components.html" style="color:var(--muted);text-decoration:none;">Components</a> &nbsp;&middot;&nbsp; <a href="patterns.html" style="color:var(--muted);text-decoration:none;">Patterns</a> &nbsp;&middot;&nbsp; <a href="advanced.html" style="color:var(--muted);text-decoration:none;">Advanced</a> &nbsp;&middot;&nbsp; <a href="interview.html" style="color:var(--muted);text-decoration:none;">Interview Prep</a></p>
+</footer>
+<script>
+const sidebarLinks = document.querySelectorAll(".sidebar a[href^='#']");
+const observer = new IntersectionObserver((entries) => {
+  entries.forEach(e => {
+    if (e.isIntersecting) {
+      sidebarLinks.forEach(l => l.classList.remove("active"));
+      const match = document.querySelector(".sidebar a[href='#" + e.target.id + "']");
+      if (match) match.classList.add("active");
+    }
+  });
+}, { rootMargin: "-20% 0px -70% 0px" });
+document.querySelectorAll("h2[id]").forEach(el => observer.observe(el));
+</script>
+
+</body>
+</html>

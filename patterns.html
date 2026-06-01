@@ -1,0 +1,352 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Design Patterns — SystemCraft</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;1,9..40,300&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root{--bg:#0a0a0f;--bg2:#111118;--bg3:#1a1a25;--card:#13131e;--border:rgba(255,255,255,0.07);--accent:#6c63ff;--accent2:#00d4aa;--accent3:#ff6b6b;--gold:#f5c842;--text:#e8e8f0;--muted:#888899;--dim:#444458;}
+  *{margin:0;padding:0;box-sizing:border-box;}html{scroll-behavior:smooth;}
+  body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);line-height:1.6;}
+  nav{position:fixed;top:0;left:0;right:0;z-index:100;background:rgba(10,10,15,0.92);backdrop-filter:blur(16px);border-bottom:1px solid var(--border);padding:0 2rem;display:flex;align-items:center;justify-content:space-between;height:60px;}
+  .logo{font-family:'Syne',sans-serif;font-weight:800;font-size:1.3rem;color:#fff;text-decoration:none;}
+  .logo span{color:var(--accent);}
+  .nav-links{display:flex;gap:0.25rem;}
+  .nav-links a{color:var(--muted);text-decoration:none;font-size:0.85rem;font-weight:500;padding:0.4rem 0.75rem;border-radius:6px;transition:all 0.2s;}
+  .nav-links a:hover,.nav-links a.active{color:#fff;background:rgba(255,255,255,0.06);}
+  .nav-cta{background:var(--accent);color:#fff;padding:0.4rem 1rem;border-radius:6px;text-decoration:none;font-size:0.85rem;font-weight:600;}
+  .page-wrap{display:grid;grid-template-columns:240px 1fr;min-height:100vh;padding-top:60px;}
+  .sidebar{position:sticky;top:60px;height:calc(100vh - 60px);overflow-y:auto;border-right:1px solid var(--border);padding:1.5rem 1rem;background:var(--bg2);}
+  .sidebar-label{font-size:0.7rem;font-weight:700;color:var(--dim);letter-spacing:1.5px;text-transform:uppercase;padding:0 0.5rem;margin-bottom:0.5rem;margin-top:1rem;}
+  .sidebar-label:first-child{margin-top:0;}
+  .sidebar a{display:block;padding:0.4rem 0.5rem;font-size:0.83rem;color:var(--muted);text-decoration:none;border-radius:6px;transition:all 0.15s;}
+  .sidebar a:hover{color:#fff;background:rgba(255,255,255,0.05);}
+  .sidebar a.active{color:#fff;background:rgba(245,200,66,0.12);font-weight:500;}
+  .content{padding:3rem 4rem;max-width:800px;}
+  .page-badge{display:inline-flex;align-items:center;gap:6px;background:rgba(245,200,66,0.1);border:1px solid rgba(245,200,66,0.25);color:var(--gold);padding:0.3rem 0.8rem;border-radius:100px;font-size:0.78rem;font-weight:500;margin-bottom:1.5rem;}
+  h1{font-family:'Syne',sans-serif;font-weight:800;font-size:2.4rem;color:#fff;letter-spacing:-1.5px;line-height:1.1;margin-bottom:0.75rem;}
+  .intro{font-size:1.05rem;color:var(--muted);line-height:1.75;margin-bottom:2.5rem;max-width:640px;}
+  h2{font-family:'Syne',sans-serif;font-weight:700;font-size:1.5rem;color:#fff;letter-spacing:-0.5px;margin:2.5rem 0 1rem;padding-top:1rem;border-top:1px solid var(--border);}
+  h2:first-of-type{border-top:none;margin-top:0;}
+  h3{font-family:'Syne',sans-serif;font-weight:600;font-size:1.05rem;color:#fff;margin:1.5rem 0 0.5rem;}
+  p{color:var(--muted);line-height:1.75;margin-bottom:1rem;font-size:0.93rem;}
+  strong{color:var(--text);}
+  ul,ol{color:var(--muted);font-size:0.9rem;line-height:2;padding-left:1.5rem;margin-bottom:1rem;}
+  .highlight{background:var(--bg3);border-left:3px solid var(--accent);border-radius:0 8px 8px 0;padding:1rem 1.25rem;margin:1.25rem 0;font-size:0.875rem;color:var(--text);}
+  .highlight strong{color:var(--accent);}
+  .tip{background:rgba(0,212,170,0.06);border-left:3px solid var(--accent2);border-radius:0 8px 8px 0;padding:1rem 1.25rem;margin:1.25rem 0;font-size:0.875rem;color:var(--text);}
+  .tip strong{color:var(--accent2);}
+  .warn{background:rgba(245,200,66,0.06);border-left:3px solid var(--gold);border-radius:0 8px 8px 0;padding:1rem 1.25rem;margin:1.25rem 0;font-size:0.875rem;color:var(--text);}
+  .warn strong{color:var(--gold);}
+  .interview{background:rgba(255,107,107,0.06);border-left:3px solid var(--accent3);border-radius:0 8px 8px 0;padding:1rem 1.25rem;margin:1.25rem 0;font-size:0.875rem;}
+  .interview strong{color:var(--accent3);display:block;margin-bottom:0.25rem;font-size:0.75rem;letter-spacing:1px;text-transform:uppercase;}
+  code{font-family:'DM Mono',monospace;background:rgba(255,255,255,0.07);padding:0.15rem 0.4rem;border-radius:4px;font-size:0.83rem;color:var(--accent2);}
+  .compare{display:grid;grid-template-columns:1fr 1fr;gap:1rem;margin:1.25rem 0;}
+  .compare-box{background:var(--card);border:1px solid var(--border);border-radius:10px;padding:1.25rem;}
+  .compare-box h4{font-family:'Syne',sans-serif;font-size:0.9rem;font-weight:700;margin-bottom:0.75rem;}
+  .compare-box ul{list-style:none;padding:0;margin:0;}
+  .compare-box ul li{font-size:0.82rem;color:var(--muted);padding:0.3rem 0;display:flex;gap:0.5rem;}
+  .pro::before{content:'✓';color:var(--accent2);}
+  .con::before{content:'✗';color:var(--accent3);}
+  .example-box{background:var(--bg3);border:1px solid var(--border);border-radius:10px;padding:1.5rem;margin:1.25rem 0;}
+  .example-box .ex-label{font-size:0.7rem;font-weight:700;color:var(--gold);letter-spacing:1.5px;text-transform:uppercase;margin-bottom:0.75rem;}
+  .example-box h4{font-family:'Syne',sans-serif;font-size:1rem;font-weight:700;color:#fff;margin-bottom:0.5rem;}
+  .example-box p{font-size:0.83rem;margin-bottom:0;}
+  .cap-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:1rem;margin:1.25rem 0;}
+  .cap-box{background:var(--card);border:1px solid var(--border);border-radius:10px;padding:1.25rem;text-align:center;}
+  .cap-box .cap-label{font-size:0.7rem;font-weight:700;letter-spacing:1px;text-transform:uppercase;margin-bottom:0.5rem;}
+  .cap-box h4{font-family:'Syne',sans-serif;font-size:0.9rem;font-weight:700;color:#fff;margin-bottom:0.4rem;}
+  .cap-box p{font-size:0.78rem;margin:0;}
+  .nav-bottom{display:flex;justify-content:space-between;align-items:center;margin-top:3rem;padding-top:2rem;border-top:1px solid var(--border);}
+  .nav-btn{display:inline-flex;align-items:center;gap:0.5rem;padding:0.6rem 1.1rem;border-radius:8px;font-size:0.85rem;font-weight:600;text-decoration:none;border:1px solid var(--border);color:var(--muted);transition:all 0.2s;}
+  .nav-btn:hover{color:#fff;border-color:rgba(255,255,255,0.2);}
+  .nav-btn.next{background:var(--accent);border-color:var(--accent);color:#fff;}
+  .nav-btn.next:hover{background:#7a72ff;}
+  .algo-grid{display:grid;grid-template-columns:1fr 1fr;gap:1rem;margin:1.25rem 0;}
+  .algo-card{background:var(--card);border:1px solid var(--border);border-radius:10px;padding:1.25rem;}
+  .algo-card h4{font-family:'Syne',sans-serif;font-size:0.9rem;font-weight:700;color:#fff;margin-bottom:0.5rem;}
+  .algo-card p{font-size:0.8rem;margin:0;}
+  @media(max-width:900px){.page-wrap{grid-template-columns:1fr;}.sidebar{display:none;}.content{padding:2rem 1.5rem;}.compare{grid-template-columns:1fr;}.cap-grid{grid-template-columns:1fr;}.algo-grid{grid-template-columns:1fr;}}
+</style>
+</head>
+<body>
+<nav>
+  <a class="logo" href="index.html">System<span>Craft</span></a>
+  <div class="nav-links">
+    <a href="index.html">Home</a>
+    <a href="fundamentals.html">Fundamentals</a>
+    <a href="components.html">Components</a>
+    <a href="patterns.html" class="active">Patterns</a>
+    <a href="advanced.html">Advanced</a>
+    <a href="interview.html">Interview Prep</a>
+    <a href="cheatsheet.html">Cheatsheet</a>
+  </div>
+  <a class="nav-cta" href="advanced.html">Next: Advanced →</a>
+</nav>
+
+<div class="page-wrap">
+  <aside class="sidebar">
+    <div class="sidebar-label">Module 3</div>
+    <a href="#sharding" class="active">Sharding</a>
+    <a href="#consistent-hashing">Consistent Hashing</a>
+    <a href="#replication">Replication</a>
+    <a href="#consistency">CAP Theorem</a>
+    <a href="#acid-base">ACID vs BASE</a>
+    <a href="#rate-limiting">Rate Limiting</a>
+    <a href="#circuit-breaker">Circuit Breaker</a>
+    <a href="#fanout">Fanout Problem</a>
+    <a href="#bloom">Bloom Filters</a>
+  </aside>
+
+  <main class="content">
+    <div class="page-badge">⚡ Module 3 · Intermediate</div>
+    <h1>Design Patterns</h1>
+    <p class="intro">This is where it gets interesting. Patterns are the solutions to problems that appear in every system. Understanding them — and when to use them — is what interviewers are testing.</p>
+
+    <!-- SHARDING -->
+    <h2 id="sharding">Sharding (Horizontal Partitioning)</h2>
+    <p>Sharding splits a large dataset across multiple database nodes (shards). Each shard holds a subset of the data. When no single database can hold all your data or handle all your queries, you shard.</p>
+
+    <div class="highlight">
+      <strong>Key question:</strong> What is the shard key? The shard key determines how data is distributed. A bad shard key creates hotspots (all traffic goes to one shard).
+    </div>
+
+    <h3>Sharding Strategies</h3>
+
+    <div class="algo-grid">
+      <div class="algo-card">
+        <h4>Hash-Based Sharding</h4>
+        <p>Hash the shard key and take modulo number of shards. Even distribution. Problem: adding a shard requires rehashing everything.</p>
+      </div>
+      <div class="algo-card">
+        <h4>Range-Based Sharding</h4>
+        <p>Split by key ranges (A–M on shard 1, N–Z on shard 2). Good for range queries. Risk of hotspots if data isn't uniformly distributed.</p>
+      </div>
+      <div class="algo-card">
+        <h4>Directory-Based Sharding</h4>
+        <p>Lookup table maps keys to shards. Very flexible. Single lookup table becomes a bottleneck and single point of failure.</p>
+      </div>
+      <div class="algo-card">
+        <h4>Geographic Sharding</h4>
+        <p>Data partitioned by region (US shard, EU shard, APAC shard). Great for data residency, latency. Imbalanced if regions have different loads.</p>
+      </div>
+    </div>
+
+    <div class="warn">
+      <strong>Sharding gotcha:</strong> Cross-shard queries (JOINs across shards) are expensive or impossible. You must design your access patterns so most queries hit a single shard.
+    </div>
+
+    <!-- CONSISTENT HASHING -->
+    <h2 id="consistent-hashing">Consistent Hashing</h2>
+    <p>Regular hash-based sharding has a problem: when you add or remove a node, you have to remap almost all keys. Consistent hashing solves this.</p>
+
+    <h3>How it works</h3>
+    <p>Imagine a ring of hash values from 0 to 2³². Servers and keys are both placed on this ring by hashing their identifiers. A key belongs to the first server clockwise from it on the ring.</p>
+
+    <p>When you <strong>add a server</strong>: only the keys between the new server and its predecessor move. That's ~1/N of total keys, not all of them.</p>
+    <p>When you <strong>remove a server</strong>: only its keys move to the next server clockwise. Again, ~1/N keys affected.</p>
+
+    <div class="example-box">
+      <div class="ex-label">Real World Use</div>
+      <h4>Where consistent hashing is used</h4>
+      <p>Amazon DynamoDB, Apache Cassandra, Vimeo's memcache layer, Discord's server routing. It's the standard approach for distributing load across a dynamic set of nodes.</p>
+    </div>
+
+    <div class="tip">
+      <strong>Virtual nodes:</strong> To prevent load imbalance (some servers getting more of the ring than others), each physical server is assigned multiple virtual positions on the ring. Cassandra uses 256 virtual nodes per server by default.
+    </div>
+
+    <!-- REPLICATION -->
+    <h2 id="replication">Replication</h2>
+    <p>Replication keeps copies of data on multiple nodes. This provides fault tolerance (if one dies, others serve) and read scaling (distribute reads across replicas).</p>
+
+    <h3>Leader-Follower (Master-Replica)</h3>
+    <p>One leader accepts all writes. Followers replicate and handle reads. Most common pattern.</p>
+    <p>✅ Simple, strong consistency for writes ❌ Write bottleneck is the leader</p>
+
+    <h3>Multi-Leader</h3>
+    <p>Multiple leaders accept writes (often one per datacenter). Great for geo-distributed systems. Hard problem: write conflicts between leaders.</p>
+
+    <h3>Leaderless (Quorum-Based)</h3>
+    <p>Any node can accept writes. Reads/writes require a quorum (W + R > N where N=replicas). Used by Cassandra and DynamoDB.</p>
+
+    <div class="interview">
+      <strong>🎯 Interview Tip</strong>
+      "If your leader goes down, how does the system recover?" — Know the answer: automatic leader election (Raft/Paxos), or manual failover. In practice: PostgreSQL uses pg_ha or Patroni; MySQL uses Orchestrator. Cloud managed DBs handle it for you.
+    </div>
+
+    <!-- CAP -->
+    <h2 id="consistency">CAP Theorem</h2>
+    <p>CAP Theorem states that a distributed system can only guarantee two of three properties simultaneously:</p>
+
+    <div class="cap-grid">
+      <div class="cap-box">
+        <div class="cap-label" style="color:var(--accent)">C</div>
+        <h4>Consistency</h4>
+        <p>Every read gets the most recent write, or an error</p>
+      </div>
+      <div class="cap-box">
+        <div class="cap-label" style="color:var(--accent2)">A</div>
+        <h4>Availability</h4>
+        <p>Every request gets a (possibly stale) response — no errors</p>
+      </div>
+      <div class="cap-box">
+        <div class="cap-label" style="color:var(--gold)">P</div>
+        <h4>Partition Tolerance</h4>
+        <p>System continues despite network partition between nodes</p>
+      </div>
+    </div>
+
+    <div class="warn">
+      <strong>The real choice:</strong> In a real distributed system, network partitions WILL happen. So you can't give up P. The real decision is: during a partition, do you prefer Consistency (reject requests) or Availability (serve potentially stale data)?
+    </div>
+
+    <p><strong>CP systems</strong> (choose consistency): HBase, Zookeeper, etcd. Stop serving or return errors during partition.<br>
+    <strong>AP systems</strong> (choose availability): Cassandra, DynamoDB, CouchDB. Serve stale data during partition, reconcile after.</p>
+
+    <div class="example-box">
+      <div class="ex-label">Real Example · Amazon DynamoDB</div>
+      <h4>The AP choice — and why Amazon made it</h4>
+      <p>DynamoDB is AP: it will serve reads even if they might be stale. Amazon's reasoning: a customer seeing a slightly stale shopping cart is far less bad than their cart being unavailable. For financial transactions, they add strongly consistent reads at higher cost. Context determines the right tradeoff.</p>
+    </div>
+
+    <!-- ACID BASE -->
+    <h2 id="acid-base">ACID vs BASE</h2>
+    <p>These are two philosophical approaches to database design that map to SQL and NoSQL respectively.</p>
+
+    <div class="compare">
+      <div class="compare-box">
+        <h4 style="color:var(--accent)">ACID</h4>
+        <ul>
+          <li class="pro">Strong consistency</li>
+          <li class="pro">Predictable behavior</li>
+          <li class="con">Harder to scale</li>
+          <li class="con">Higher latency under load</li>
+        </ul>
+        <p style="font-size:0.8rem;color:var(--muted);margin-top:0.75rem;">PostgreSQL, MySQL, Oracle</p>
+      </div>
+      <div class="compare-box">
+        <h4 style="color:var(--accent2)">BASE</h4>
+        <p style="font-size:0.82rem;color:var(--muted);">Basically Available, Soft state, Eventually consistent</p>
+        <ul>
+          <li class="pro">Highly scalable</li>
+          <li class="pro">High availability</li>
+          <li class="con">Eventual (not immediate) consistency</li>
+          <li class="con">App must handle stale data</li>
+        </ul>
+        <p style="font-size:0.8rem;color:var(--muted);margin-top:0.75rem;">Cassandra, MongoDB (default), DynamoDB</p>
+      </div>
+    </div>
+
+    <!-- RATE LIMITING -->
+    <h2 id="rate-limiting">Rate Limiting</h2>
+    <p>Rate limiting prevents any single user or service from overwhelming your system. It's essential for public APIs and high-scale services.</p>
+
+    <h3>Algorithms</h3>
+
+    <div class="algo-grid">
+      <div class="algo-card">
+        <h4>Token Bucket</h4>
+        <p>Bucket fills with tokens at a fixed rate. Each request consumes a token. Allows bursts up to bucket size. Used by AWS, Stripe.</p>
+      </div>
+      <div class="algo-card">
+        <h4>Leaky Bucket</h4>
+        <p>Requests enter a queue (bucket) and are processed at a fixed rate. Smooths out bursts. If bucket is full, requests are dropped.</p>
+      </div>
+      <div class="algo-card">
+        <h4>Fixed Window Counter</h4>
+        <p>Count requests in a fixed time window (e.g., 100 req/minute). Simple but has edge case: 200 requests at window boundary.</p>
+      </div>
+      <div class="algo-card">
+        <h4>Sliding Window Log</h4>
+        <p>Track timestamps of requests. Remove old timestamps. Count remaining. Accurate but memory-intensive at scale.</p>
+      </div>
+    </div>
+
+    <div class="tip">
+      <strong>Implementation:</strong> Store rate limit state in Redis (per user key). Token bucket is most popular in practice. Return <code>429 Too Many Requests</code> with <code>Retry-After</code> header when limit is hit.
+    </div>
+
+    <!-- CIRCUIT BREAKER -->
+    <h2 id="circuit-breaker">Circuit Breaker Pattern</h2>
+    <p>When a service is down or slow, repeatedly trying to call it wastes resources and creates cascading failures. The circuit breaker stops calls to a failing service and allows it to recover.</p>
+
+    <h3>Three States</h3>
+    <p><strong>Closed</strong> — normal operation, all requests pass through. Count failures.<br>
+    <strong>Open</strong> — failure threshold exceeded. All requests fail fast (no call made to downstream). A timer starts.<br>
+    <strong>Half-Open</strong> — timer expires. Allow one test request. Success → close the circuit. Failure → stay open.</p>
+
+    <div class="example-box">
+      <div class="ex-label">Real Example · Netflix Hystrix</div>
+      <h4>Netflix's circuit breaker in practice</h4>
+      <p>Netflix wraps every service call in a circuit breaker (Hystrix library). If the recommendation service is down, the circuit opens and Netflix serves a degraded response (top 10 popular movies) instead of an error. Users see something rather than nothing — this is graceful degradation.</p>
+    </div>
+
+    <!-- FANOUT -->
+    <h2 id="fanout">The Fanout Problem</h2>
+    <p>Fanout is when one write operation causes many downstream operations. Classic example: when a celebrity posts on Twitter, their tweet must be delivered to 100M followers.</p>
+
+    <div class="compare">
+      <div class="compare-box">
+        <h4 style="color:var(--accent)">Fanout on Write (Push)</h4>
+        <ul>
+          <li class="pro">Fast reads (pre-computed feeds)</li>
+          <li class="con">Slow writes for popular users</li>
+          <li class="con">Storage cost (100M copies of tweet)</li>
+        </ul>
+        <p style="font-size:0.8rem;color:var(--muted);margin-top:0.75rem;">Used for: most users with moderate followers</p>
+      </div>
+      <div class="compare-box">
+        <h4 style="color:var(--accent2)">Fanout on Read (Pull)</h4>
+        <ul>
+          <li class="pro">Fast writes (one write)</li>
+          <li class="con">Slow reads (aggregate at read time)</li>
+          <li class="con">Higher read-time compute</li>
+        </ul>
+        <p style="font-size:0.8rem;color:var(--muted);margin-top:0.75rem;">Used for: celebrities/users with huge followings</p>
+      </div>
+    </div>
+
+    <div class="highlight">
+      <strong>Twitter's hybrid approach:</strong> Push model for normal users. Pull model for users with >1M followers (Lady Gaga, Obama). At read time, merge the push feed with pull from celebrities. This is a classic interview answer.
+    </div>
+
+    <!-- BLOOM FILTER -->
+    <h2 id="bloom">Bloom Filters</h2>
+    <p>A Bloom filter is a probabilistic data structure that answers "is this element in the set?" with zero false negatives but possible false positives. Uses very little memory.</p>
+
+    <p>Use cases: check if a username is taken before querying the database. Check if a URL has been crawled. Check if a password is in a breach list. The Bloom filter gives a fast "definitely not" or "probably yes" answer.</p>
+
+    <div class="tip">
+      <strong>Rule:</strong> Bloom filter says NO → definitely not in the set (no DB query needed). Bloom filter says YES → probably in set, but query DB to confirm. This eliminates most unnecessary DB queries.
+    </div>
+
+    <div class="nav-bottom">
+      <a href="components.html" class="nav-btn">← Components</a>
+      <a href="advanced.html" class="nav-btn next">Next: Advanced →</a>
+    </div>
+  </main>
+</div>
+
+
+<footer style="border-top:1px solid var(--border);padding:1.5rem 2rem;text-align:center;color:var(--dim);font-size:0.8rem;margin-top:2rem;">
+  <p>SystemCraft &nbsp;&middot;&nbsp; <a href="index.html" style="color:var(--muted);text-decoration:none;">Home</a> &nbsp;&middot;&nbsp; <a href="fundamentals.html" style="color:var(--muted);text-decoration:none;">Fundamentals</a> &nbsp;&middot;&nbsp; <a href="components.html" style="color:var(--muted);text-decoration:none;">Components</a> &nbsp;&middot;&nbsp; <a href="patterns.html" style="color:var(--muted);text-decoration:none;">Patterns</a> &nbsp;&middot;&nbsp; <a href="advanced.html" style="color:var(--muted);text-decoration:none;">Advanced</a> &nbsp;&middot;&nbsp; <a href="interview.html" style="color:var(--muted);text-decoration:none;">Interview Prep</a></p>
+</footer>
+<script>
+const sidebarLinks = document.querySelectorAll(".sidebar a[href^='#']");
+const observer = new IntersectionObserver((entries) => {
+  entries.forEach(e => {
+    if (e.isIntersecting) {
+      sidebarLinks.forEach(l => l.classList.remove("active"));
+      const match = document.querySelector(".sidebar a[href='#" + e.target.id + "']");
+      if (match) match.classList.add("active");
+    }
+  });
+}, { rootMargin: "-20% 0px -70% 0px" });
+document.querySelectorAll("h2[id]").forEach(el => observer.observe(el));
+</script>
+
+</body>
+</html>

@@ -1,0 +1,403 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Core Components — SystemCraft</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;1,9..40,300&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root{--bg:#0a0a0f;--bg2:#111118;--bg3:#1a1a25;--card:#13131e;--border:rgba(255,255,255,0.07);--accent:#6c63ff;--accent2:#00d4aa;--accent3:#ff6b6b;--gold:#f5c842;--text:#e8e8f0;--muted:#888899;--dim:#444458;}
+  *{margin:0;padding:0;box-sizing:border-box;}html{scroll-behavior:smooth;}
+  body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);line-height:1.6;}
+  nav{position:fixed;top:0;left:0;right:0;z-index:100;background:rgba(10,10,15,0.92);backdrop-filter:blur(16px);border-bottom:1px solid var(--border);padding:0 2rem;display:flex;align-items:center;justify-content:space-between;height:60px;}
+  .logo{font-family:'Syne',sans-serif;font-weight:800;font-size:1.3rem;color:#fff;text-decoration:none;}
+  .logo span{color:var(--accent);}
+  .nav-links{display:flex;gap:0.25rem;}
+  .nav-links a{color:var(--muted);text-decoration:none;font-size:0.85rem;font-weight:500;padding:0.4rem 0.75rem;border-radius:6px;transition:all 0.2s;}
+  .nav-links a:hover,.nav-links a.active{color:#fff;background:rgba(255,255,255,0.06);}
+  .nav-cta{background:var(--accent);color:#fff;padding:0.4rem 1rem;border-radius:6px;text-decoration:none;font-size:0.85rem;font-weight:600;}
+  .page-wrap{display:grid;grid-template-columns:240px 1fr;min-height:100vh;padding-top:60px;}
+  .sidebar{position:sticky;top:60px;height:calc(100vh - 60px);overflow-y:auto;border-right:1px solid var(--border);padding:1.5rem 1rem;background:var(--bg2);}
+  .sidebar-label{font-size:0.7rem;font-weight:700;color:var(--dim);letter-spacing:1.5px;text-transform:uppercase;padding:0 0.5rem;margin-bottom:0.5rem;margin-top:1rem;}
+  .sidebar-label:first-child{margin-top:0;}
+  .sidebar a{display:block;padding:0.4rem 0.5rem;font-size:0.83rem;color:var(--muted);text-decoration:none;border-radius:6px;transition:all 0.15s;}
+  .sidebar a:hover{color:#fff;background:rgba(255,255,255,0.05);}
+  .sidebar a.active{color:#fff;background:rgba(108,99,255,0.15);font-weight:500;}
+  .content{padding:3rem 4rem;max-width:800px;}
+  .page-badge{display:inline-flex;align-items:center;gap:6px;background:rgba(0,212,170,0.1);border:1px solid rgba(0,212,170,0.25);color:var(--accent2);padding:0.3rem 0.8rem;border-radius:100px;font-size:0.78rem;font-weight:500;margin-bottom:1.5rem;}
+  h1{font-family:'Syne',sans-serif;font-weight:800;font-size:2.4rem;color:#fff;letter-spacing:-1.5px;line-height:1.1;margin-bottom:0.75rem;}
+  .intro{font-size:1.05rem;color:var(--muted);line-height:1.75;margin-bottom:2.5rem;max-width:640px;}
+  h2{font-family:'Syne',sans-serif;font-weight:700;font-size:1.5rem;color:#fff;letter-spacing:-0.5px;margin:2.5rem 0 1rem;padding-top:1rem;border-top:1px solid var(--border);}
+  h2:first-of-type{border-top:none;margin-top:0;}
+  h3{font-family:'Syne',sans-serif;font-weight:600;font-size:1.05rem;color:#fff;margin:1.5rem 0 0.5rem;}
+  p{color:var(--muted);line-height:1.75;margin-bottom:1rem;font-size:0.93rem;}
+  strong{color:var(--text);}
+  ul,ol{color:var(--muted);font-size:0.9rem;line-height:2;padding-left:1.5rem;margin-bottom:1rem;}
+  .highlight{background:var(--bg3);border-left:3px solid var(--accent);border-radius:0 8px 8px 0;padding:1rem 1.25rem;margin:1.25rem 0;font-size:0.875rem;color:var(--text);}
+  .highlight strong{color:var(--accent);}
+  .tip{background:rgba(0,212,170,0.06);border-left:3px solid var(--accent2);border-radius:0 8px 8px 0;padding:1rem 1.25rem;margin:1.25rem 0;font-size:0.875rem;color:var(--text);}
+  .tip strong{color:var(--accent2);}
+  .warn{background:rgba(245,200,66,0.06);border-left:3px solid var(--gold);border-radius:0 8px 8px 0;padding:1rem 1.25rem;margin:1.25rem 0;font-size:0.875rem;color:var(--text);}
+  .warn strong{color:var(--gold);}
+  .interview{background:rgba(255,107,107,0.06);border-left:3px solid var(--accent3);border-radius:0 8px 8px 0;padding:1rem 1.25rem;margin:1.25rem 0;font-size:0.875rem;}
+  .interview strong{color:var(--accent3);display:block;margin-bottom:0.25rem;font-size:0.75rem;letter-spacing:1px;text-transform:uppercase;}
+  code{font-family:'DM Mono',monospace;background:rgba(255,255,255,0.07);padding:0.15rem 0.4rem;border-radius:4px;font-size:0.83rem;color:var(--accent2);}
+  .compare{display:grid;grid-template-columns:1fr 1fr;gap:1rem;margin:1.25rem 0;}
+  .compare-box{background:var(--card);border:1px solid var(--border);border-radius:10px;padding:1.25rem;}
+  .compare-box h4{font-family:'Syne',sans-serif;font-size:0.9rem;font-weight:700;margin-bottom:0.75rem;}
+  .compare-box ul{list-style:none;padding:0;margin:0;}
+  .compare-box ul li{font-size:0.82rem;color:var(--muted);padding:0.3rem 0;display:flex;gap:0.5rem;border:none;}
+  .pro::before{content:'✓';color:var(--accent2);}
+  .con::before{content:'✗';color:var(--accent3);}
+  .example-box{background:var(--bg3);border:1px solid var(--border);border-radius:10px;padding:1.5rem;margin:1.25rem 0;}
+  .example-box .ex-label{font-size:0.7rem;font-weight:700;color:var(--accent2);letter-spacing:1.5px;text-transform:uppercase;margin-bottom:0.75rem;}
+  .example-box h4{font-family:'Syne',sans-serif;font-size:1rem;font-weight:700;color:#fff;margin-bottom:0.5rem;}
+  .example-box p{font-size:0.83rem;margin-bottom:0;}
+  .db-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1rem;margin:1.25rem 0;}
+  .db-card{background:var(--card);border:1px solid var(--border);border-radius:10px;padding:1.25rem;}
+  .db-card h4{font-family:'Syne',sans-serif;font-size:0.85rem;font-weight:700;color:#fff;margin-bottom:0.5rem;}
+  .db-card .examples{font-size:0.75rem;color:var(--accent);margin-bottom:0.5rem;}
+  .db-card p{font-size:0.8rem;margin:0;}
+  .nav-bottom{display:flex;justify-content:space-between;align-items:center;margin-top:3rem;padding-top:2rem;border-top:1px solid var(--border);}
+  .nav-btn{display:inline-flex;align-items:center;gap:0.5rem;padding:0.6rem 1.1rem;border-radius:8px;font-size:0.85rem;font-weight:600;text-decoration:none;border:1px solid var(--border);color:var(--muted);transition:all 0.2s;}
+  .nav-btn:hover{color:#fff;border-color:rgba(255,255,255,0.2);}
+  .nav-btn.next{background:var(--accent);border-color:var(--accent);color:#fff;}
+  .nav-btn.next:hover{background:#7a72ff;}
+  .flow{background:var(--card);border:1px solid var(--border);border-radius:10px;padding:1.25rem;margin:1.25rem 0;font-family:'DM Mono',monospace;font-size:0.78rem;color:var(--muted);line-height:1.9;}
+  .flow span{color:var(--accent2);}
+  @media(max-width:900px){.page-wrap{grid-template-columns:1fr;}.sidebar{display:none;}.content{padding:2rem 1.5rem;}.db-grid{grid-template-columns:1fr;}.compare{grid-template-columns:1fr;}}
+</style>
+</head>
+<body>
+<nav>
+  <a class="logo" href="index.html">System<span>Craft</span></a>
+  <div class="nav-links">
+    <a href="index.html">Home</a>
+    <a href="fundamentals.html">Fundamentals</a>
+    <a href="components.html" class="active">Components</a>
+    <a href="patterns.html">Patterns</a>
+    <a href="advanced.html">Advanced</a>
+    <a href="interview.html">Interview Prep</a>
+    <a href="cheatsheet.html">Cheatsheet</a>
+  </div>
+  <a class="nav-cta" href="patterns.html">Next: Patterns →</a>
+</nav>
+
+<div class="page-wrap">
+  <aside class="sidebar">
+    <div class="sidebar-label">Module 2</div>
+    <a href="#databases" class="active">Databases</a>
+    <a href="#sql-nosql">SQL vs NoSQL</a>
+    <a href="#acid">ACID & Transactions</a>
+    <a href="#caching">Caching</a>
+    <a href="#cache-strategies">Cache Strategies</a>
+    <a href="#cdn">CDN</a>
+    <a href="#queues">Message Queues</a>
+    <a href="#kafka">Kafka Deep Dive</a>
+    <a href="#apis">API Design</a>
+    <a href="#loadbalancer">Load Balancers</a>
+  </aside>
+
+  <main class="content">
+    <div class="page-badge">🔧 Module 2 · Beginner–Intermediate</div>
+    <h1>Core Components</h1>
+    <p class="intro">Every system is built from the same set of components. Master these building blocks and you can design any system. We cover what each is, when to use it, and how companies use them in practice.</p>
+
+    <!-- DATABASES -->
+    <h2 id="databases">Databases</h2>
+    <p>Databases are the most important component to understand for system design. Almost every interview decision flows back to a database choice.</p>
+
+    <div class="highlight">
+      <strong>Core question:</strong> Which database you pick depends on your data model, access patterns, scale requirements, and consistency needs. There is no universally "best" database.
+    </div>
+
+    <h2 id="sql-nosql">SQL vs NoSQL</h2>
+
+    <div class="compare">
+      <div class="compare-box">
+        <h4 style="color:var(--accent)">SQL (Relational)</h4>
+        <ul>
+          <li class="pro">Strong ACID guarantees</li>
+          <li class="pro">Powerful JOIN queries</li>
+          <li class="pro">Schema enforced — data integrity</li>
+          <li class="pro">Mature tooling, well understood</li>
+          <li class="con">Harder to scale horizontally</li>
+          <li class="con">Schema changes require migrations</li>
+          <li class="con">Not great for unstructured data</li>
+        </ul>
+        <p style="font-size:0.8rem;color:var(--muted);margin-top:0.75rem;">Examples: PostgreSQL, MySQL, SQLite</p>
+      </div>
+      <div class="compare-box">
+        <h4 style="color:var(--accent2)">NoSQL</h4>
+        <ul>
+          <li class="pro">Horizontal scaling built-in</li>
+          <li class="pro">Flexible schema</li>
+          <li class="pro">Optimized for specific access patterns</li>
+          <li class="pro">High write throughput</li>
+          <li class="con">Eventual consistency (usually)</li>
+          <li class="con">No JOIN support (in most)</li>
+          <li class="con">Less mature than SQL</li>
+        </ul>
+        <p style="font-size:0.8rem;color:var(--muted);margin-top:0.75rem;">Examples: MongoDB, Cassandra, DynamoDB, Redis</p>
+      </div>
+    </div>
+
+    <h3>NoSQL Types — Know These</h3>
+    <div class="db-grid">
+      <div class="db-card">
+        <h4>Document</h4>
+        <div class="examples">MongoDB, Firestore, CouchDB</div>
+        <p>JSON-like documents. Great for flexible schemas. Use for: catalogs, user profiles, content management.</p>
+      </div>
+      <div class="db-card">
+        <h4>Key-Value</h4>
+        <div class="examples">Redis, DynamoDB, Riak</div>
+        <p>Fast O(1) lookups by key. Great for caching, sessions. Limited querying ability.</p>
+      </div>
+      <div class="db-card">
+        <h4>Wide-Column</h4>
+        <div class="examples">Cassandra, HBase, BigTable</div>
+        <p>Rows with dynamic columns. Excellent write throughput. Great for time-series, IoT, analytics at scale.</p>
+      </div>
+      <div class="db-card">
+        <h4>Graph</h4>
+        <div class="examples">Neo4j, Amazon Neptune</div>
+        <p>Nodes and edges. Perfect for relationship-heavy data: social networks, fraud detection, recommendations.</p>
+      </div>
+      <div class="db-card">
+        <h4>Time-Series</h4>
+        <div class="examples">InfluxDB, TimescaleDB</div>
+        <p>Optimized for timestamped data. High ingest rates, efficient range queries. Use for metrics, monitoring.</p>
+      </div>
+      <div class="db-card">
+        <h4>Search</h4>
+        <div class="examples">Elasticsearch, Solr</div>
+        <p>Full-text search, faceting, relevance ranking. Not a primary database — use alongside main DB.</p>
+      </div>
+    </div>
+
+    <div class="interview">
+      <strong>🎯 Interview Tip</strong>
+      "Which database would you use?" is the most common follow-up. Answer: describe your data model, access patterns, then justify your choice. Never just say "I'd use MongoDB" without reasoning.
+    </div>
+
+    <h2 id="acid">ACID Properties & Transactions</h2>
+    <p>ACID is what makes relational databases trustworthy for financial and transactional data.</p>
+
+    <p><strong>Atomicity</strong> — All operations in a transaction succeed, or all fail. No partial updates. (e.g., bank transfer deducts AND credits, or neither happens.)</p>
+    <p><strong>Consistency</strong> — A transaction brings the database from one valid state to another. Constraints are never violated.</p>
+    <p><strong>Isolation</strong> — Concurrent transactions don't interfere. Results look as if transactions ran sequentially.</p>
+    <p><strong>Durability</strong> — Committed transactions survive crashes. Written to disk, not just memory.</p>
+
+    <div class="example-box">
+      <div class="ex-label">Real Example · Instagram</div>
+      <h4>How Instagram evolved its database</h4>
+      <p>Instagram started on PostgreSQL for user accounts and photos (relational, ACID). As they scaled, they added Cassandra for activity feeds (high write throughput, eventually consistent is OK). They use both — right tool for the job.</p>
+    </div>
+
+    <!-- CACHING -->
+    <h2 id="caching">Caching</h2>
+    <p>Caching stores copies of frequently accessed data in fast storage (usually RAM) to reduce load on slower storage (databases, APIs).</p>
+
+    <div class="highlight">
+      <strong>The 80/20 rule of caching:</strong> 20% of your data is accessed 80% of the time. Cache that 20% and you eliminate 80% of database load.
+    </div>
+
+    <h2 id="cache-strategies">Cache Strategies</h2>
+
+    <h3>Cache-Aside (Lazy Loading)</h3>
+    <p>Application checks cache first. On miss, loads from DB and populates cache.</p>
+    <div class="flow">
+      <span>Read:</span> Check cache → miss → read from DB → write to cache → return<br>
+      <span>Write:</span> Write to DB → invalidate/update cache
+    </div>
+    <p>✅ Only caches what's needed. ❌ Cache miss causes 3 steps (slow first request).</p>
+
+    <h3>Write-Through</h3>
+    <p>Every write goes to cache AND database simultaneously.</p>
+    <div class="flow">
+      <span>Write:</span> Write to cache + DB atomically → return<br>
+      <span>Read:</span> Check cache → always a hit (if item exists)
+    </div>
+    <p>✅ Cache always fresh. ❌ Write latency higher (two writes per operation).</p>
+
+    <h3>Write-Back (Write-Behind)</h3>
+    <p>Write to cache only. Async batch write to DB later.</p>
+    <div class="flow">
+      <span>Write:</span> Write to cache → return (DB write async, batched)<br>
+      <span>Risk:</span> Cache failure before DB write = data loss
+    </div>
+    <p>✅ Very fast writes. ❌ Risk of data loss if cache crashes before flush.</p>
+
+    <h3>Cache Eviction Policies</h3>
+    <p><strong>LRU (Least Recently Used)</strong> — evict what hasn't been accessed longest. Most common.<br>
+    <strong>LFU (Least Frequently Used)</strong> — evict what's accessed fewest times.<br>
+    <strong>TTL (Time To Live)</strong> — expire entries after a fixed time. Simple, predictable.</p>
+
+    <div class="compare">
+      <div class="compare-box">
+        <h4 style="color:var(--accent)">Redis</h4>
+        <ul>
+          <li class="pro">Rich data structures (sets, sorted sets, lists)</li>
+          <li class="pro">Pub/Sub messaging</li>
+          <li class="pro">Persistence options</li>
+          <li class="pro">Lua scripting</li>
+        </ul>
+        <p style="font-size:0.8rem;color:var(--muted);margin-top:0.75rem;">Use for: sessions, leaderboards, rate limiting, pub/sub</p>
+      </div>
+      <div class="compare-box">
+        <h4 style="color:var(--muted)">Memcached</h4>
+        <ul>
+          <li class="pro">Simpler, slightly faster</li>
+          <li class="pro">Multi-threaded</li>
+          <li class="con">Only key-value (strings)</li>
+          <li class="con">No persistence</li>
+        </ul>
+        <p style="font-size:0.8rem;color:var(--muted);margin-top:0.75rem;">Use for: simple object caching only</p>
+      </div>
+    </div>
+
+    <p>In most modern systems, <strong>Redis wins</strong> unless you have a very specific reason to use Memcached.</p>
+
+    <!-- CDN -->
+    <h2 id="cdn">CDN — Content Delivery Networks</h2>
+    <p>A CDN is a globally distributed network of servers (edge nodes) that cache content close to users. Instead of everyone hitting your origin server, they hit a nearby edge server.</p>
+
+    <div class="tip">
+      <strong>Rule of thumb:</strong> Anything static (images, videos, CSS, JS bundles, PDFs) should be served via CDN. Dynamic content may also be cached with the right headers.
+    </div>
+
+    <h3>How CDNs Work</h3>
+    <ol>
+      <li>User requests <code>cdn.example.com/image.jpg</code></li>
+      <li>DNS resolves to the nearest CDN edge server (using Anycast routing)</li>
+      <li>Edge server checks its cache. Hit → return immediately. Miss → fetch from origin</li>
+      <li>Edge caches the response and returns it to user</li>
+      <li>Next request for same content from same region → instant cache hit</li>
+    </ol>
+
+    <div class="example-box">
+      <div class="ex-label">Real Example · Netflix</div>
+      <h4>Netflix's Open Connect CDN</h4>
+      <p>Netflix built their own CDN (Open Connect) deployed inside ISP data centers. Popular movies are pre-loaded to edge servers before peak hours. 95%+ of Netflix traffic is served from edge without hitting origin. They serve ~15% of global internet traffic this way.</p>
+    </div>
+
+    <!-- QUEUES -->
+    <h2 id="queues">Message Queues</h2>
+    <p>Message queues enable asynchronous communication between services. Producer writes a message; consumer reads and processes it — they don't need to be running simultaneously.</p>
+
+    <div class="highlight">
+      <strong>Why queues?</strong> Decouple services. Handle traffic spikes (queue absorbs bursts). Enable retry on failure. Allow independent scaling of producers vs consumers.
+    </div>
+
+    <h3>Core Concepts</h3>
+    <p><strong>Producer</strong> — sends messages to the queue<br>
+    <strong>Consumer</strong> — reads and processes messages<br>
+    <strong>Topic/Queue</strong> — named channel for messages<br>
+    <strong>Acknowledgment</strong> — consumer signals message was processed<br>
+    <strong>Dead Letter Queue (DLQ)</strong> — messages that fail after N retries go here</p>
+
+    <h3>Pub/Sub vs Point-to-Point</h3>
+    <p><strong>Point-to-Point:</strong> One producer → one consumer. Message deleted after consumed. Use for: task queues, job processing.</p>
+    <p><strong>Pub/Sub:</strong> One producer → many consumers (subscribers). Each subscriber gets a copy. Use for: event broadcasting, notifications.</p>
+
+    <h2 id="kafka">Kafka — Event Streaming</h2>
+    <p>Apache Kafka is not just a queue — it's a distributed <strong>event log</strong>. Messages are retained for a configurable time and consumers read at their own pace.</p>
+
+    <div class="compare">
+      <div class="compare-box">
+        <h4 style="color:var(--accent)">Use Kafka when:</h4>
+        <ul style="list-style:none;padding:0;margin:0;">
+          <li class="pro" style="font-size:0.82rem;padding:0.3rem 0;display:flex;gap:0.5rem;">Need to replay events</li>
+          <li class="pro" style="font-size:0.82rem;padding:0.3rem 0;display:flex;gap:0.5rem;">Multiple consumers of same stream</li>
+          <li class="pro" style="font-size:0.82rem;padding:0.3rem 0;display:flex;gap:0.5rem;">High throughput (millions/sec)</li>
+          <li class="pro" style="font-size:0.82rem;padding:0.3rem 0;display:flex;gap:0.5rem;">Event sourcing architecture</li>
+        </ul>
+      </div>
+      <div class="compare-box">
+        <h4 style="color:var(--accent2)">Use RabbitMQ/SQS when:</h4>
+        <ul style="list-style:none;padding:0;margin:0;">
+          <li class="pro" style="font-size:0.82rem;padding:0.3rem 0;display:flex;gap:0.5rem;">Simple task queue (one consumer)</li>
+          <li class="pro" style="font-size:0.82rem;padding:0.3rem 0;display:flex;gap:0.5rem;">Need routing logic</li>
+          <li class="pro" style="font-size:0.82rem;padding:0.3rem 0;display:flex;gap:0.5rem;">Managed service (SQS)</li>
+          <li class="pro" style="font-size:0.82rem;padding:0.3rem 0;display:flex;gap:0.5rem;">Don't need replay</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="example-box">
+      <div class="ex-label">Real Example · Uber</div>
+      <h4>Uber's dispatch with Kafka</h4>
+      <p>When a rider requests a trip, Uber publishes a trip_requested event to Kafka. Multiple consumers read this: dispatch service (find a driver), surge pricing service (recalculate prices), analytics service (log the event). Each service works independently, at its own pace, without blocking the rider's request.</p>
+    </div>
+
+    <!-- APIS -->
+    <h2 id="apis">API Design</h2>
+    <p>APIs are the contracts between services. Good API design is what separates maintainable systems from spaghetti.</p>
+
+    <h3>REST vs GraphQL vs gRPC</h3>
+    <div class="db-grid" style="grid-template-columns:1fr 1fr 1fr;">
+      <div class="db-card">
+        <h4>REST</h4>
+        <div class="examples">HTTP + JSON</div>
+        <p>Resource-based. Stateless. Simple. Universal. Over-fetching/under-fetching is the main problem.</p>
+      </div>
+      <div class="db-card">
+        <h4>GraphQL</h4>
+        <div class="examples">HTTP + custom query lang</div>
+        <p>Client specifies exactly what data it needs. Great for mobile apps. Complex to implement server-side.</p>
+      </div>
+      <div class="db-card">
+        <h4>gRPC</h4>
+        <div class="examples">HTTP/2 + Protocol Buffers</div>
+        <p>Fast binary protocol. Strongly typed. Great for internal service-to-service. Not browser-friendly natively.</p>
+      </div>
+    </div>
+
+    <!-- LOAD BALANCER -->
+    <h2 id="loadbalancer">Load Balancers</h2>
+    <p>A load balancer distributes incoming traffic across multiple servers. Without it, horizontal scaling doesn't work.</p>
+
+    <h3>Load Balancing Algorithms</h3>
+    <p><strong>Round Robin</strong> — requests distributed equally in order. Simple, works when servers are identical.<br>
+    <strong>Least Connections</strong> — routes to server with fewest active connections. Better for variable request times.<br>
+    <strong>IP Hash</strong> — same client IP always routes to same server. Useful for session stickiness.<br>
+    <strong>Weighted Round Robin</strong> — servers with more capacity get more requests.</p>
+
+    <h3>L4 vs L7 Load Balancers</h3>
+    <p><strong>L4 (Transport Layer)</strong> — routes based on IP/port only. Very fast. No visibility into content.<br>
+    <strong>L7 (Application Layer)</strong> — routes based on HTTP headers, URL, cookies. Slower but smarter. Can route <code>/api/*</code> to API servers and <code>/static/*</code> to static servers.</p>
+
+    <div class="interview">
+      <strong>🎯 Interview Tip</strong>
+      Don't forget: the load balancer itself can be a single point of failure. At scale, you'd have multiple load balancers with a VIP (Virtual IP) handled by DNS or an upstream layer (e.g., AWS's ELB is already HA).
+    </div>
+
+    <div class="nav-bottom">
+      <a href="fundamentals.html" class="nav-btn">← Fundamentals</a>
+      <a href="patterns.html" class="nav-btn next">Next: Patterns →</a>
+    </div>
+  </main>
+</div>
+
+
+<footer style="border-top:1px solid var(--border);padding:1.5rem 2rem;text-align:center;color:var(--dim);font-size:0.8rem;margin-top:2rem;">
+  <p>SystemCraft &nbsp;&middot;&nbsp; <a href="index.html" style="color:var(--muted);text-decoration:none;">Home</a> &nbsp;&middot;&nbsp; <a href="fundamentals.html" style="color:var(--muted);text-decoration:none;">Fundamentals</a> &nbsp;&middot;&nbsp; <a href="components.html" style="color:var(--muted);text-decoration:none;">Components</a> &nbsp;&middot;&nbsp; <a href="patterns.html" style="color:var(--muted);text-decoration:none;">Patterns</a> &nbsp;&middot;&nbsp; <a href="advanced.html" style="color:var(--muted);text-decoration:none;">Advanced</a> &nbsp;&middot;&nbsp; <a href="interview.html" style="color:var(--muted);text-decoration:none;">Interview Prep</a></p>
+</footer>
+<script>
+const sidebarLinks = document.querySelectorAll(".sidebar a[href^='#']");
+const observer = new IntersectionObserver((entries) => {
+  entries.forEach(e => {
+    if (e.isIntersecting) {
+      sidebarLinks.forEach(l => l.classList.remove("active"));
+      const match = document.querySelector(".sidebar a[href='#" + e.target.id + "']");
+      if (match) match.classList.add("active");
+    }
+  });
+}, { rootMargin: "-20% 0px -70% 0px" });
+document.querySelectorAll("h2[id]").forEach(el => observer.observe(el));
+</script>
+
+</body>
+</html>

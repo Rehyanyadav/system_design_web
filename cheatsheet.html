@@ -1,0 +1,421 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Cheatsheet — SystemCraft</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root{--bg:#0a0a0f;--bg2:#111118;--bg3:#1a1a25;--card:#13131e;--border:rgba(255,255,255,0.07);--accent:#6c63ff;--accent2:#00d4aa;--accent3:#ff6b6b;--gold:#f5c842;--text:#e8e8f0;--muted:#888899;--dim:#444458;}
+  *{margin:0;padding:0;box-sizing:border-box;}html{scroll-behavior:smooth;}
+  body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);line-height:1.5;font-size:14px;}
+  nav{position:fixed;top:0;left:0;right:0;z-index:100;background:rgba(10,10,15,0.95);backdrop-filter:blur(16px);border-bottom:1px solid var(--border);padding:0 2rem;display:flex;align-items:center;justify-content:space-between;height:60px;}
+  .logo{font-family:'Syne',sans-serif;font-weight:800;font-size:1.3rem;color:#fff;text-decoration:none;}
+  .logo span{color:var(--accent);}
+  .nav-links{display:flex;gap:0.25rem;}
+  .nav-links a{color:var(--muted);text-decoration:none;font-size:0.85rem;font-weight:500;padding:0.4rem 0.75rem;border-radius:6px;transition:all 0.2s;}
+  .nav-links a:hover,.nav-links a.active{color:#fff;background:rgba(255,255,255,0.06);}
+  .nav-cta{background:var(--accent);color:#fff;padding:0.4rem 1rem;border-radius:6px;text-decoration:none;font-size:0.85rem;font-weight:600;}
+
+  .wrap{max-width:1200px;margin:0 auto;padding:5rem 2rem 3rem;}
+  .page-header{text-align:center;margin-bottom:2.5rem;}
+  .page-badge{display:inline-flex;align-items:center;gap:6px;background:rgba(245,200,66,0.1);border:1px solid rgba(245,200,66,0.25);color:var(--gold);padding:0.3rem 0.8rem;border-radius:100px;font-size:0.78rem;font-weight:500;margin-bottom:1rem;}
+  h1{font-family:'Syne',sans-serif;font-weight:800;font-size:2rem;color:#fff;letter-spacing:-1px;margin-bottom:0.5rem;}
+  .page-sub{color:var(--muted);font-size:0.9rem;}
+
+  .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(320px,1fr));gap:1rem;}
+  .card{background:var(--card);border:1px solid var(--border);border-radius:10px;padding:1.25rem;}
+  .card-title{font-family:'Syne',sans-serif;font-weight:700;font-size:0.9rem;color:#fff;margin-bottom:0.75rem;display:flex;align-items:center;gap:0.5rem;}
+  .dot{width:8px;height:8px;border-radius:50%;flex-shrink:0;}
+  .dot-purple{background:var(--accent);}
+  .dot-teal{background:var(--accent2);}
+  .dot-gold{background:var(--gold);}
+  .dot-red{background:var(--accent3);}
+  .dot-white{background:#fff;}
+
+  table{width:100%;border-collapse:collapse;font-size:0.78rem;}
+  td,th{padding:0.35rem 0.5rem;text-align:left;border-bottom:1px solid rgba(255,255,255,0.04);}
+  th{color:var(--dim);font-size:0.68rem;letter-spacing:1px;text-transform:uppercase;font-weight:600;padding-bottom:0.5rem;}
+  td:first-child{color:var(--text);font-weight:500;}
+  td:not(:first-child){color:var(--muted);}
+  tr:last-child td{border-bottom:none;}
+
+  .kv{display:grid;grid-template-columns:1fr 1fr;gap:0.25rem 0.75rem;}
+  .kv-key{color:var(--text);font-size:0.78rem;font-weight:500;}
+  .kv-val{color:var(--muted);font-size:0.78rem;}
+
+  .pill-list{display:flex;flex-wrap:wrap;gap:0.4rem;}
+  .pill{font-size:0.72rem;padding:0.2rem 0.55rem;border-radius:100px;font-weight:500;}
+  .pill-purple{background:rgba(108,99,255,0.15);color:#a89fff;}
+  .pill-teal{background:rgba(0,212,170,0.12);color:var(--accent2);}
+  .pill-gold{background:rgba(245,200,66,0.12);color:var(--gold);}
+  .pill-red{background:rgba(255,107,107,0.12);color:var(--accent3);}
+  .pill-gray{background:rgba(255,255,255,0.06);color:var(--muted);}
+
+  code{font-family:'DM Mono',monospace;background:rgba(255,255,255,0.07);padding:0.1rem 0.35rem;border-radius:3px;font-size:0.74rem;color:var(--accent2);}
+
+  .section-label{font-size:0.7rem;font-weight:700;color:var(--dim);letter-spacing:2px;text-transform:uppercase;margin:2rem 0 0.75rem;}
+
+  .algo-row{display:flex;justify-content:space-between;align-items:baseline;padding:0.35rem 0;border-bottom:1px solid rgba(255,255,255,0.04);}
+  .algo-row:last-child{border-bottom:none;}
+  .algo-name{color:var(--text);font-size:0.78rem;font-weight:500;}
+  .algo-desc{color:var(--muted);font-size:0.75rem;text-align:right;}
+
+  .list-plain{list-style:none;padding:0;}
+  .list-plain li{font-size:0.78rem;color:var(--muted);padding:0.3rem 0;border-bottom:1px solid rgba(255,255,255,0.04);display:flex;gap:0.5rem;}
+  .list-plain li:last-child{border-bottom:none;}
+  .list-plain li::before{content:'→';color:var(--dim);font-size:0.68rem;flex-shrink:0;margin-top:1px;}
+  .li-strong{color:var(--text)!important;font-weight:500;}
+
+  .numbers-grid{display:grid;grid-template-columns:1fr 1fr;gap:0.25rem;}
+  .num-row{display:flex;justify-content:space-between;padding:0.25rem 0;border-bottom:1px solid rgba(255,255,255,0.04);}
+  .num-row:last-child{border-bottom:none;}
+  .num-label{font-size:0.75rem;color:var(--muted);}
+  .num-val{font-family:'DM Mono',monospace;font-size:0.75rem;color:var(--accent2);}
+
+  footer{border-top:1px solid var(--border);padding:1.5rem 2rem;text-align:center;color:var(--dim);font-size:0.8rem;margin-top:3rem;}
+  footer a{color:var(--muted);text-decoration:none;}
+
+  @media(max-width:700px){.nav-links{display:none;}.grid{grid-template-columns:1fr;}}
+</style>
+</head>
+<body>
+<nav>
+  <a class="logo" href="index.html">System<span>Craft</span></a>
+  <div class="nav-links">
+    <a href="index.html">Home</a>
+    <a href="fundamentals.html">Fundamentals</a>
+    <a href="components.html">Components</a>
+    <a href="patterns.html">Patterns</a>
+    <a href="advanced.html">Advanced</a>
+    <a href="interview.html">Interview Prep</a>
+    <a href="cheatsheet.html" class="active">Cheatsheet</a>
+  </div>
+  <a class="nav-cta" href="interview.html">Interview Prep →</a>
+</nav>
+
+<div class="wrap">
+  <div class="page-header">
+    <div class="page-badge">📋 Quick Reference</div>
+    <h1>System Design Cheatsheet</h1>
+    <p class="page-sub">Everything in one place. Print it out. Review before interviews.</p>
+  </div>
+
+  <!-- NUMBERS -->
+  <div class="section-label">Numbers to Memorize</div>
+  <div class="grid">
+    <div class="card">
+      <div class="card-title"><span class="dot dot-teal"></span>Latency Reference (approximate)</div>
+      <div class="numbers-grid">
+        <div class="num-row"><span class="num-label">L1 cache</span><span class="num-val">~0.5 ns</span></div>
+        <div class="num-row"><span class="num-label">L2 cache</span><span class="num-val">~7 ns</span></div>
+        <div class="num-row"><span class="num-label">RAM read</span><span class="num-val">~100 ns</span></div>
+        <div class="num-row"><span class="num-label">SSD random</span><span class="num-val">~150 µs</span></div>
+        <div class="num-row"><span class="num-label">HDD random</span><span class="num-val">~10 ms</span></div>
+        <div class="num-row"><span class="num-label">Same DC RTT</span><span class="num-val">~0.5 ms</span></div>
+        <div class="num-row"><span class="num-label">US → EU</span><span class="num-val">~75 ms</span></div>
+        <div class="num-row"><span class="num-label">US → Asia</span><span class="num-val">~150 ms</span></div>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-title"><span class="dot dot-gold"></span>Scale Estimation</div>
+      <div class="numbers-grid">
+        <div class="num-row"><span class="num-label">1 day</span><span class="num-val">~100K sec</span></div>
+        <div class="num-row"><span class="num-label">1 month</span><span class="num-val">~2.5M sec</span></div>
+        <div class="num-row"><span class="num-label">char</span><span class="num-val">1 B</span></div>
+        <div class="num-row"><span class="num-label">int / long</span><span class="num-val">4 B / 8 B</span></div>
+        <div class="num-row"><span class="num-label">image avg</span><span class="num-val">~300 KB</span></div>
+        <div class="num-row"><span class="num-label">video/min</span><span class="num-val">~50 MB</span></div>
+        <div class="num-row"><span class="num-label">100M DAU, 5req/d</span><span class="num-val">~5K QPS</span></div>
+        <div class="num-row"><span class="num-label">Peak load</span><span class="num-val">2–3× avg</span></div>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-title"><span class="dot dot-purple"></span>HTTP Status Codes</div>
+      <table>
+        <tr><td>200 OK</td><td>Success</td></tr>
+        <tr><td>201 Created</td><td>Resource created (POST)</td></tr>
+        <tr><td>301/302</td><td>Redirect (permanent/temporary)</td></tr>
+        <tr><td>400 Bad Request</td><td>Client error in input</td></tr>
+        <tr><td>401 Unauthorized</td><td>Not authenticated</td></tr>
+        <tr><td>403 Forbidden</td><td>Authenticated but no access</td></tr>
+        <tr><td>404 Not Found</td><td>Resource doesn't exist</td></tr>
+        <tr><td>409 Conflict</td><td>State conflict (duplicate)</td></tr>
+        <tr><td>429 Too Many</td><td>Rate limit hit</td></tr>
+        <tr><td>500 Server Error</td><td>Bug/crash on server</td></tr>
+        <tr><td>502 Bad Gateway</td><td>Upstream service failed</td></tr>
+        <tr><td>503 Unavailable</td><td>Server overloaded/down</td></tr>
+        <tr><td>504 Gateway Timeout</td><td>Upstream timed out</td></tr>
+      </table>
+    </div>
+  </div>
+
+  <!-- DATABASE SELECTION -->
+  <div class="section-label">Database Selection Guide</div>
+  <div class="grid">
+    <div class="card">
+      <div class="card-title"><span class="dot dot-purple"></span>When to use SQL</div>
+      <ul class="list-plain">
+        <li><span class="li-strong">Financial data</span> — ACID transactions critical</li>
+        <li><span class="li-strong">Complex relationships</span> — JOINs across many entities</li>
+        <li><span class="li-strong">Strict schema</span> — data integrity enforced</li>
+        <li><span class="li-strong">Reporting & analytics</span> — complex ad-hoc queries</li>
+        <li><span class="li-strong">Examples</span> — user accounts, orders, payments</li>
+      </ul>
+    </div>
+    <div class="card">
+      <div class="card-title"><span class="dot dot-teal"></span>NoSQL by type</div>
+      <table>
+        <tr><th>Type</th><th>Use case</th><th>Example</th></tr>
+        <tr><td>Key-Value</td><td>Caching, sessions</td><td>Redis, DynamoDB</td></tr>
+        <tr><td>Document</td><td>Flexible schema, catalog</td><td>MongoDB</td></tr>
+        <tr><td>Wide-Col</td><td>High write, time-series</td><td>Cassandra</td></tr>
+        <tr><td>Graph</td><td>Relationships, social</td><td>Neo4j</td></tr>
+        <tr><td>Search</td><td>Full-text, faceting</td><td>Elasticsearch</td></tr>
+        <tr><td>Time-series</td><td>Metrics, IoT</td><td>InfluxDB</td></tr>
+      </table>
+    </div>
+    <div class="card">
+      <div class="card-title"><span class="dot dot-gold"></span>CAP Theorem Quick Guide</div>
+      <table>
+        <tr><th>Pick</th><th>Meaning</th><th>Examples</th></tr>
+        <tr><td>CP</td><td>Consistent + partition tolerant. Returns error if can't guarantee fresh data.</td><td>HBase, etcd, Zookeeper</td></tr>
+        <tr><td>AP</td><td>Available + partition tolerant. Returns possibly stale data during partition.</td><td>Cassandra, DynamoDB, CouchDB</td></tr>
+        <tr><td>CA</td><td>Not real in distributed systems — partitions always happen.</td><td>Single-node SQL</td></tr>
+      </table>
+      <p style="font-size:0.75rem;color:var(--dim);margin-top:0.75rem;">Real choice: C vs A during a partition (P is always required).</p>
+    </div>
+  </div>
+
+  <!-- CACHING -->
+  <div class="section-label">Caching Patterns</div>
+  <div class="grid">
+    <div class="card">
+      <div class="card-title"><span class="dot dot-teal"></span>Cache Strategies</div>
+      <table>
+        <tr><th>Strategy</th><th>Read</th><th>Write</th><th>Risk</th></tr>
+        <tr><td>Cache-Aside</td><td>Check cache → miss → DB</td><td>Write DB, invalidate cache</td><td>Cache miss = slow first hit</td></tr>
+        <tr><td>Write-Through</td><td>Always cache hit</td><td>Write cache + DB</td><td>Write latency ↑</td></tr>
+        <tr><td>Write-Back</td><td>Always cache hit</td><td>Write cache, async DB</td><td>Data loss if cache dies</td></tr>
+      </table>
+    </div>
+    <div class="card">
+      <div class="card-title"><span class="dot dot-purple"></span>Cache Eviction</div>
+      <div class="algo-row"><span class="algo-name">LRU — Least Recently Used</span><span class="algo-desc">Most common. Evict oldest access.</span></div>
+      <div class="algo-row"><span class="algo-name">LFU — Least Frequently Used</span><span class="algo-desc">Evict accessed fewest times.</span></div>
+      <div class="algo-row"><span class="algo-name">TTL — Time To Live</span><span class="algo-desc">Expire after fixed duration.</span></div>
+      <div class="algo-row"><span class="algo-name">FIFO — First In First Out</span><span class="algo-desc">Evict oldest insertion.</span></div>
+      <p style="font-size:0.75rem;color:var(--dim);margin-top:0.75rem;">80/20 rule: 20% of data = 80% of requests. Cache that 20%.</p>
+    </div>
+    <div class="card">
+      <div class="card-title"><span class="dot dot-gold"></span>Redis vs Memcached</div>
+      <table>
+        <tr><th></th><th>Redis</th><th>Memcached</th></tr>
+        <tr><td>Data types</td><td>Rich (sets, sorted sets, lists, hashes)</td><td>String only</td></tr>
+        <tr><td>Persistence</td><td>RDB + AOF options</td><td>None</td></tr>
+        <tr><td>Pub/Sub</td><td>Yes</td><td>No</td></tr>
+        <tr><td>Clustering</td><td>Yes (Redis Cluster)</td><td>Client-side</td></tr>
+        <tr><td>Choose</td><td>Almost always</td><td>Only for simplest use</td></tr>
+      </table>
+    </div>
+  </div>
+
+  <!-- SCALING PATTERNS -->
+  <div class="section-label">Scaling Patterns</div>
+  <div class="grid">
+    <div class="card">
+      <div class="card-title"><span class="dot dot-purple"></span>Sharding Strategies</div>
+      <table>
+        <tr><th>Strategy</th><th>Pro</th><th>Con</th></tr>
+        <tr><td>Hash-based</td><td>Even distribution</td><td>Reshard = rehash all</td></tr>
+        <tr><td>Range-based</td><td>Good for range queries</td><td>Hotspot risk</td></tr>
+        <tr><td>Geo-based</td><td>Low latency by region</td><td>Imbalanced regions</td></tr>
+        <tr><td>Directory</td><td>Very flexible</td><td>Lookup table = SPOF</td></tr>
+      </table>
+      <p style="font-size:0.75rem;color:var(--dim);margin-top:0.75rem;">Use consistent hashing to minimize reshuffling when nodes added/removed.</p>
+    </div>
+    <div class="card">
+      <div class="card-title"><span class="dot dot-teal"></span>Rate Limiting Algorithms</div>
+      <div class="algo-row"><span class="algo-name">Token Bucket</span><span class="algo-desc">Allows burst. Used by AWS, Stripe.</span></div>
+      <div class="algo-row"><span class="algo-name">Leaky Bucket</span><span class="algo-desc">Smooths bursts. Fixed outflow rate.</span></div>
+      <div class="algo-row"><span class="algo-name">Fixed Window</span><span class="algo-desc">Simple. Edge-case at boundaries.</span></div>
+      <div class="algo-row"><span class="algo-name">Sliding Window Log</span><span class="algo-desc">Most accurate. High memory cost.</span></div>
+      <div class="algo-row"><span class="algo-name">Sliding Window Counter</span><span class="algo-desc">Good balance of accuracy + cost.</span></div>
+      <p style="font-size:0.75rem;color:var(--dim);margin-top:0.75rem;">Store counters in Redis. Return <code>429</code> + <code>Retry-After</code> header.</p>
+    </div>
+    <div class="card">
+      <div class="card-title"><span class="dot dot-red"></span>Load Balancing Algorithms</div>
+      <div class="algo-row"><span class="algo-name">Round Robin</span><span class="algo-desc">Equal requests. Servers must be equal.</span></div>
+      <div class="algo-row"><span class="algo-name">Least Connections</span><span class="algo-desc">Best for variable request times.</span></div>
+      <div class="algo-row"><span class="algo-name">IP Hash</span><span class="algo-desc">Sticky sessions (same client → same server).</span></div>
+      <div class="algo-row"><span class="algo-name">Weighted RR</span><span class="algo-desc">Servers with more capacity get more traffic.</span></div>
+      <p style="font-size:0.75rem;color:var(--dim);margin-top:0.75rem;">L7 LB routes by URL/headers. L4 LB routes by IP/port only.</p>
+    </div>
+  </div>
+
+  <!-- MESSAGING -->
+  <div class="section-label">Messaging & Async</div>
+  <div class="grid">
+    <div class="card">
+      <div class="card-title"><span class="dot dot-gold"></span>Kafka vs RabbitMQ vs SQS</div>
+      <table>
+        <tr><th></th><th>Kafka</th><th>RabbitMQ</th><th>SQS</th></tr>
+        <tr><td>Model</td><td>Event log</td><td>Message queue</td><td>Managed queue</td></tr>
+        <tr><td>Replay</td><td>Yes ✓</td><td>No ✗</td><td>No ✗</td></tr>
+        <tr><td>Throughput</td><td>Very high</td><td>High</td><td>High</td></tr>
+        <tr><td>Consumers</td><td>Many (fan-out)</td><td>One per msg</td><td>One per msg</td></tr>
+        <tr><td>Use for</td><td>Event streaming, audit logs, replay</td><td>Task queues, routing</td><td>Simple queues on AWS</td></tr>
+      </table>
+    </div>
+    <div class="card">
+      <div class="card-title"><span class="dot dot-teal"></span>API Protocols</div>
+      <table>
+        <tr><th>Protocol</th><th>Best for</th><th>Notes</th></tr>
+        <tr><td>REST</td><td>Public APIs, simple CRUD</td><td>HTTP + JSON. Universal.</td></tr>
+        <tr><td>GraphQL</td><td>Mobile apps, flexible queries</td><td>Client picks fields. Complex server.</td></tr>
+        <tr><td>gRPC</td><td>Internal microservices</td><td>HTTP/2 + Protobuf. Fast, typed.</td></tr>
+        <tr><td>WebSocket</td><td>Real-time (chat, live updates)</td><td>Persistent bidirectional connection.</td></tr>
+        <tr><td>SSE</td><td>Server push (one-way)</td><td>Simpler than WebSocket for push.</td></tr>
+      </table>
+    </div>
+  </div>
+
+  <!-- ADVANCED PATTERNS -->
+  <div class="section-label">Advanced Patterns at a Glance</div>
+  <div class="grid">
+    <div class="card">
+      <div class="card-title"><span class="dot dot-red"></span>Distributed System Patterns</div>
+      <ul class="list-plain">
+        <li><span class="li-strong">Circuit Breaker</span> — Stop calling failing service. 3 states: closed/open/half-open.</li>
+        <li><span class="li-strong">Saga Pattern</span> — Distributed transactions via compensating actions. Choreography or orchestration.</li>
+        <li><span class="li-strong">Event Sourcing</span> — Store events, not state. Replay to reconstruct. Full audit log.</li>
+        <li><span class="li-strong">CQRS</span> — Separate read and write models. Optimize each independently.</li>
+        <li><span class="li-strong">Bulkhead</span> — Isolate failures. Separate thread pools per downstream service.</li>
+        <li><span class="li-strong">Sidecar</span> — Deploy infra logic (logging, mesh) alongside app without modifying app code.</li>
+      </ul>
+    </div>
+    <div class="card">
+      <div class="card-title"><span class="dot dot-purple"></span>Replication Patterns</div>
+      <table>
+        <tr><th>Pattern</th><th>Writes</th><th>Tradeoff</th></tr>
+        <tr><td>Leader-Follower</td><td>Leader only</td><td>Simple, write bottleneck</td></tr>
+        <tr><td>Multi-Leader</td><td>Multiple leaders</td><td>Geo-distributed, conflict risk</td></tr>
+        <tr><td>Leaderless</td><td>Any node (quorum)</td><td>Cassandra-style, tunable consistency</td></tr>
+      </table>
+      <p style="font-size:0.75rem;color:var(--dim);margin-top:0.75rem;"><strong style="color:var(--text)">Quorum:</strong> W + R &gt; N → strong consistency. (e.g., N=3, W=2, R=2)</p>
+    </div>
+    <div class="card">
+      <div class="card-title"><span class="dot dot-white"></span>Observability Stack</div>
+      <div class="algo-row"><span class="algo-name">Metrics</span><span class="algo-desc">Prometheus + Grafana</span></div>
+      <div class="algo-row"><span class="algo-name">Logs</span><span class="algo-desc">ELK Stack / Datadog Logs</span></div>
+      <div class="algo-row"><span class="algo-name">Traces</span><span class="algo-desc">Jaeger / Zipkin / AWS X-Ray</span></div>
+      <div class="algo-row"><span class="algo-name">APM</span><span class="algo-desc">Datadog / New Relic</span></div>
+      <p style="font-size:0.75rem;color:var(--dim);margin-top:0.75rem;">Metrics = something is wrong. Logs = what happened. Traces = where it happened.</p>
+    </div>
+  </div>
+
+  <!-- INTERVIEW FRAMEWORK -->
+  <div class="section-label">Interview Answer Framework</div>
+  <div class="grid">
+    <div class="card" style="grid-column:span 2;">
+      <div class="card-title"><span class="dot dot-gold"></span>The 6 Steps — Every Interview</div>
+      <div style="display:grid;grid-template-columns:repeat(6,1fr);gap:0.75rem;margin-top:0.25rem;">
+        <div style="text-align:center;">
+          <div style="width:32px;height:32px;border-radius:8px;background:rgba(108,99,255,0.15);display:flex;align-items:center;justify-content:center;font-family:'Syne',sans-serif;font-weight:800;font-size:0.85rem;color:var(--accent);margin:0 auto 0.5rem;">1</div>
+          <div style="font-size:0.75rem;font-weight:600;color:#fff;margin-bottom:0.25rem;">Clarify</div>
+          <div style="font-size:0.7rem;color:var(--muted);">Ask scope, scale, constraints. Never assume.</div>
+        </div>
+        <div style="text-align:center;">
+          <div style="width:32px;height:32px;border-radius:8px;background:rgba(108,99,255,0.15);display:flex;align-items:center;justify-content:center;font-family:'Syne',sans-serif;font-weight:800;font-size:0.85rem;color:var(--accent);margin:0 auto 0.5rem;">2</div>
+          <div style="font-size:0.75rem;font-weight:600;color:#fff;margin-bottom:0.25rem;">Estimate</div>
+          <div style="font-size:0.7rem;color:var(--muted);">QPS, storage, bandwidth. Back-of-envelope.</div>
+        </div>
+        <div style="text-align:center;">
+          <div style="width:32px;height:32px;border-radius:8px;background:rgba(108,99,255,0.15);display:flex;align-items:center;justify-content:center;font-family:'Syne',sans-serif;font-weight:800;font-size:0.85rem;color:var(--accent);margin:0 auto 0.5rem;">3</div>
+          <div style="font-size:0.75rem;font-weight:600;color:#fff;margin-bottom:0.25rem;">High-Level</div>
+          <div style="font-size:0.7rem;color:var(--muted);">Big boxes: LB, servers, cache, DB. Main flow.</div>
+        </div>
+        <div style="text-align:center;">
+          <div style="width:32px;height:32px;border-radius:8px;background:rgba(108,99,255,0.15);display:flex;align-items:center;justify-content:center;font-family:'Syne',sans-serif;font-weight:800;font-size:0.85rem;color:var(--accent);margin:0 auto 0.5rem;">4</div>
+          <div style="font-size:0.75rem;font-weight:600;color:#fff;margin-bottom:0.25rem;">Data Model</div>
+          <div style="font-size:0.7rem;color:var(--muted);">Entities, schema, access patterns.</div>
+        </div>
+        <div style="text-align:center;">
+          <div style="width:32px;height:32px;border-radius:8px;background:rgba(108,99,255,0.15);display:flex;align-items:center;justify-content:center;font-family:'Syne',sans-serif;font-weight:800;font-size:0.85rem;color:var(--accent);margin:0 auto 0.5rem;">5</div>
+          <div style="font-size:0.75rem;font-weight:600;color:#fff;margin-bottom:0.25rem;">Deep Dive</div>
+          <div style="font-size:0.7rem;color:var(--muted);">2-3 interesting components. Tradeoffs.</div>
+        </div>
+        <div style="text-align:center;">
+          <div style="width:32px;height:32px;border-radius:8px;background:rgba(108,99,255,0.15);display:flex;align-items:center;justify-content:center;font-family:'Syne',sans-serif;font-weight:800;font-size:0.85rem;color:var(--accent);margin:0 auto 0.5rem;">6</div>
+          <div style="font-size:0.75rem;font-weight:600;color:#fff;margin-bottom:0.25rem;">Failures</div>
+          <div style="font-size:0.7rem;color:var(--muted);">SPOFs, hotspots, what if X goes down?</div>
+        </div>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-title"><span class="dot dot-teal"></span>Common Interview Questions</div>
+      <div class="pill-list">
+        <span class="pill pill-purple">URL Shortener</span>
+        <span class="pill pill-teal">Instagram</span>
+        <span class="pill pill-teal">WhatsApp</span>
+        <span class="pill pill-red">Netflix</span>
+        <span class="pill pill-red">Uber</span>
+        <span class="pill pill-gold">Twitter Feed</span>
+        <span class="pill pill-gray">Google Search</span>
+        <span class="pill pill-gray">YouTube</span>
+        <span class="pill pill-purple">Rate Limiter</span>
+        <span class="pill pill-red">Key-Value Store</span>
+        <span class="pill pill-gray">Pastebin</span>
+        <span class="pill pill-teal">Dropbox</span>
+        <span class="pill pill-gray">Notification Service</span>
+        <span class="pill pill-gold">News Feed</span>
+        <span class="pill pill-purple">Web Crawler</span>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-title"><span class="dot dot-red"></span>Red Flags Interviewers Watch For</div>
+      <ul class="list-plain">
+        <li>Jumping to solution without clarifying requirements</li>
+        <li>Picking databases/tech without justification</li>
+        <li>No mention of scale or failure scenarios</li>
+        <li>Designing a single point of failure and not catching it</li>
+        <li>Silence for more than 30 seconds without communicating</li>
+        <li>Overengineering a simple problem</li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- TECH MAP -->
+  <div class="section-label">Technology Quick-Pick Map</div>
+  <div class="grid">
+    <div class="card" style="grid-column:span 3;">
+      <div class="card-title"><span class="dot dot-white"></span>Problem → Technology</div>
+      <table>
+        <tr><th>Problem</th><th>Technology choices</th><th>Notes</th></tr>
+        <tr><td>Store user sessions</td><td>Redis</td><td>Fast, TTL-based expiry, distributed</td></tr>
+        <tr><td>Full-text search</td><td>Elasticsearch</td><td>Alongside primary DB, not instead of</td></tr>
+        <tr><td>Real-time notifications</td><td>WebSocket + Redis Pub/Sub</td><td>Or SSE for server-push only</td></tr>
+        <tr><td>Background jobs / task queue</td><td>Celery + Redis, or SQS + Lambda</td><td>Decouple long-running work from request</td></tr>
+        <tr><td>Stream processing</td><td>Apache Kafka + Flink/Spark Streaming</td><td>Real-time analytics, event-driven</td></tr>
+        <tr><td>Distributed coordination</td><td>Zookeeper, etcd</td><td>Leader election, config, distributed locks</td></tr>
+        <tr><td>Object / blob storage</td><td>AWS S3, GCS</td><td>Images, videos, backups — never in DB</td></tr>
+        <tr><td>Geospatial queries</td><td>Redis GEOADD, PostGIS</td><td>Find nearby drivers, POIs</td></tr>
+        <tr><td>Time-series metrics</td><td>InfluxDB, Prometheus, TimescaleDB</td><td>IoT data, monitoring, server metrics</td></tr>
+        <tr><td>Social graph queries</td><td>Neo4j, Amazon Neptune</td><td>Friend-of-friend, recommendations</td></tr>
+        <tr><td>ID generation (distributed)</td><td>Twitter Snowflake, UUID v4</td><td>Never auto-increment across distributed nodes</td></tr>
+        <tr><td>Rate limiting state</td><td>Redis (atomic Lua scripts)</td><td>Token bucket stored per-user</td></tr>
+        <tr><td>Service discovery</td><td>Consul, Kubernetes DNS, AWS Cloud Map</td><td>Services find each other dynamically</td></tr>
+        <tr><td>API Gateway</td><td>Kong, AWS API Gateway, NGINX</td><td>Auth, rate limiting, routing in one place</td></tr>
+      </table>
+    </div>
+  </div>
+
+</div>
+
+<footer>
+  <p>SystemCraft — Free System Design Course &nbsp;·&nbsp; <a href="index.html">Home</a> &nbsp;·&nbsp; <a href="fundamentals.html">Fundamentals</a> &nbsp;·&nbsp; <a href="components.html">Components</a> &nbsp;·&nbsp; <a href="patterns.html">Patterns</a> &nbsp;·&nbsp; <a href="advanced.html">Advanced</a> &nbsp;·&nbsp; <a href="interview.html">Interview Prep</a> &nbsp;·&nbsp; <a href="cheatsheet.html">Cheatsheet</a></p>
+</footer>
+
+</body>
+</html>

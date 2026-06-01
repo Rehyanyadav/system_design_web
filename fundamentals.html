@@ -1,0 +1,377 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Fundamentals — SystemCraft</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;1,9..40,300&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg:#0a0a0f;--bg2:#111118;--bg3:#1a1a25;--card:#13131e;
+    --border:rgba(255,255,255,0.07);--accent:#6c63ff;--accent2:#00d4aa;
+    --accent3:#ff6b6b;--gold:#f5c842;--text:#e8e8f0;--muted:#888899;--dim:#444458;
+  }
+  *{margin:0;padding:0;box-sizing:border-box;}
+  html{scroll-behavior:smooth;}
+  body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);line-height:1.6;font-size:16px;}
+  nav{position:fixed;top:0;left:0;right:0;z-index:100;background:rgba(10,10,15,0.92);backdrop-filter:blur(16px);border-bottom:1px solid var(--border);padding:0 2rem;display:flex;align-items:center;justify-content:space-between;height:60px;}
+  .logo{font-family:'Syne',sans-serif;font-weight:800;font-size:1.3rem;color:#fff;text-decoration:none;letter-spacing:-0.5px;}
+  .logo span{color:var(--accent);}
+  .nav-links{display:flex;gap:0.25rem;}
+  .nav-links a{color:var(--muted);text-decoration:none;font-size:0.85rem;font-weight:500;padding:0.4rem 0.75rem;border-radius:6px;transition:all 0.2s;}
+  .nav-links a:hover,.nav-links a.active{color:#fff;background:rgba(255,255,255,0.06);}
+  .nav-cta{background:var(--accent);color:#fff;padding:0.4rem 1rem;border-radius:6px;text-decoration:none;font-size:0.85rem;font-weight:600;}
+
+  .page-wrap{display:grid;grid-template-columns:240px 1fr;min-height:100vh;padding-top:60px;}
+  
+  /* SIDEBAR */
+  .sidebar{position:sticky;top:60px;height:calc(100vh - 60px);overflow-y:auto;border-right:1px solid var(--border);padding:1.5rem 1rem;background:var(--bg2);}
+  .sidebar-label{font-size:0.7rem;font-weight:700;color:var(--dim);letter-spacing:1.5px;text-transform:uppercase;padding:0 0.5rem;margin-bottom:0.5rem;margin-top:1rem;}
+  .sidebar-label:first-child{margin-top:0;}
+  .sidebar a{display:block;padding:0.4rem 0.5rem;font-size:0.83rem;color:var(--muted);text-decoration:none;border-radius:6px;transition:all 0.15s;}
+  .sidebar a:hover{color:#fff;background:rgba(255,255,255,0.05);}
+  .sidebar a.active{color:#fff;background:rgba(108,99,255,0.15);font-weight:500;}
+
+  /* CONTENT */
+  .content{padding:3rem 4rem;max-width:800px;}
+  .page-badge{display:inline-flex;align-items:center;gap:6px;background:rgba(108,99,255,0.12);border:1px solid rgba(108,99,255,0.25);color:#a89fff;padding:0.3rem 0.8rem;border-radius:100px;font-size:0.78rem;font-weight:500;margin-bottom:1.5rem;}
+  h1{font-family:'Syne',sans-serif;font-weight:800;font-size:2.4rem;color:#fff;letter-spacing:-1.5px;line-height:1.1;margin-bottom:0.75rem;}
+  .intro{font-size:1.05rem;color:var(--muted);line-height:1.75;margin-bottom:2.5rem;max-width:640px;}
+  h2{font-family:'Syne',sans-serif;font-weight:700;font-size:1.5rem;color:#fff;letter-spacing:-0.5px;margin:2.5rem 0 1rem;padding-top:1rem;border-top:1px solid var(--border);}
+  h2:first-of-type{border-top:none;margin-top:0;}
+  h3{font-family:'Syne',sans-serif;font-weight:600;font-size:1.05rem;color:#fff;margin:1.5rem 0 0.5rem;}
+  p{color:var(--muted);line-height:1.75;margin-bottom:1rem;font-size:0.93rem;}
+  strong{color:var(--text);}
+
+  .highlight{background:var(--bg3);border-left:3px solid var(--accent);border-radius:0 8px 8px 0;padding:1rem 1.25rem;margin:1.25rem 0;font-size:0.875rem;color:var(--text);}
+  .highlight strong{color:var(--accent);}
+  .tip{background:rgba(0,212,170,0.06);border-left:3px solid var(--accent2);border-radius:0 8px 8px 0;padding:1rem 1.25rem;margin:1.25rem 0;font-size:0.875rem;color:var(--text);}
+  .tip strong{color:var(--accent2);}
+  .warn{background:rgba(245,200,66,0.06);border-left:3px solid var(--gold);border-radius:0 8px 8px 0;padding:1rem 1.25rem;margin:1.25rem 0;font-size:0.875rem;color:var(--text);}
+  .warn strong{color:var(--gold);}
+  .interview{background:rgba(255,107,107,0.06);border-left:3px solid var(--accent3);border-radius:0 8px 8px 0;padding:1rem 1.25rem;margin:1.25rem 0;font-size:0.875rem;}
+  .interview strong{color:var(--accent3);display:block;margin-bottom:0.25rem;font-size:0.75rem;letter-spacing:1px;text-transform:uppercase;}
+
+  code{font-family:'DM Mono',monospace;background:rgba(255,255,255,0.07);padding:0.15rem 0.4rem;border-radius:4px;font-size:0.83rem;color:var(--accent2);}
+  pre{background:var(--card);border:1px solid var(--border);border-radius:8px;padding:1.25rem;overflow-x:auto;margin:1rem 0;}
+  pre code{background:none;padding:0;font-size:0.82rem;}
+
+  .compare{display:grid;grid-template-columns:1fr 1fr;gap:1rem;margin:1.25rem 0;}
+  .compare-box{background:var(--card);border:1px solid var(--border);border-radius:10px;padding:1.25rem;}
+  .compare-box h4{font-family:'Syne',sans-serif;font-size:0.9rem;font-weight:700;margin-bottom:0.75rem;}
+  .compare-box ul{list-style:none;padding:0;}
+  .compare-box ul li{font-size:0.82rem;color:var(--muted);padding:0.3rem 0;display:flex;gap:0.5rem;}
+  .pro::before{content:'✓';color:var(--accent2);}
+  .con::before{content:'✗';color:var(--accent3);}
+
+  .example-box{background:var(--bg3);border:1px solid var(--border);border-radius:10px;padding:1.5rem;margin:1.25rem 0;}
+  .example-box .ex-label{font-size:0.7rem;font-weight:700;color:var(--accent);letter-spacing:1.5px;text-transform:uppercase;margin-bottom:0.75rem;}
+  .example-box h4{font-family:'Syne',sans-serif;font-size:1rem;font-weight:700;color:#fff;margin-bottom:0.5rem;}
+  .example-box p{font-size:0.83rem;margin-bottom:0;}
+
+  .tag{display:inline-block;font-size:0.68rem;font-weight:600;padding:0.2rem 0.5rem;border-radius:4px;letter-spacing:0.5px;}
+  .tag-green{background:rgba(0,212,170,0.12);color:var(--accent2);}
+  .tag-red{background:rgba(255,107,107,0.12);color:var(--accent3);}
+  .tag-purple{background:rgba(108,99,255,0.12);color:var(--accent);}
+  .tag-gold{background:rgba(245,200,66,0.12);color:var(--gold);}
+
+  .nav-bottom{display:flex;justify-content:space-between;align-items:center;margin-top:3rem;padding-top:2rem;border-top:1px solid var(--border);}
+  .nav-btn{display:inline-flex;align-items:center;gap:0.5rem;padding:0.6rem 1.1rem;border-radius:8px;font-size:0.85rem;font-weight:600;text-decoration:none;border:1px solid var(--border);color:var(--muted);transition:all 0.2s;}
+  .nav-btn:hover{color:#fff;border-color:rgba(255,255,255,0.2);}
+  .nav-btn.next{background:var(--accent);border-color:var(--accent);color:#fff;}
+  .nav-btn.next:hover{background:#7a72ff;}
+
+  @media(max-width:900px){.page-wrap{grid-template-columns:1fr;}.sidebar{display:none;}.content{padding:2rem 1.5rem;}}
+</style>
+</head>
+<body>
+<nav>
+  <a class="logo" href="index.html">System<span>Craft</span></a>
+  <div class="nav-links">
+    <a href="index.html">Home</a>
+    <a href="fundamentals.html" class="active">Fundamentals</a>
+    <a href="components.html">Components</a>
+    <a href="patterns.html">Patterns</a>
+    <a href="advanced.html">Advanced</a>
+    <a href="interview.html">Interview Prep</a>
+    <a href="cheatsheet.html">Cheatsheet</a>
+  </div>
+  <a class="nav-cta" href="components.html">Next: Components →</a>
+</nav>
+
+<div class="page-wrap">
+  <aside class="sidebar">
+    <div class="sidebar-label">Module 1</div>
+    <a href="#internet" class="active">How the Internet Works</a>
+    <a href="#dns">DNS Resolution</a>
+    <a href="#http">HTTP & HTTPS</a>
+    <a href="#tcp-udp">TCP vs UDP</a>
+    <a href="#latency">Latency & Throughput</a>
+    <a href="#scaling">Vertical vs Horizontal Scaling</a>
+    <a href="#distributed">Distributed Systems Intro</a>
+    <a href="#fallacies">8 Fallacies</a>
+  </aside>
+
+  <main class="content">
+    <div class="page-badge">🧱 Module 1 · Beginner</div>
+    <h1>Fundamentals</h1>
+    <p class="intro">Before designing any system, you need solid mental models. This module builds the foundation — how data moves, what slows it down, and how systems fail. Don't skip this.</p>
+
+    <!-- INTERNET -->
+    <h2 id="internet">How the Internet Works</h2>
+    <p>The internet is a network of networks. When you type <code>google.com</code> into a browser, a surprisingly complex series of events happens in milliseconds.</p>
+
+    <div class="highlight">
+      <strong>Core model:</strong> The internet is built on a <strong>client-server model</strong>. A client (your browser, mobile app) makes <strong>requests</strong>. A server processes them and sends back <strong>responses</strong>.
+    </div>
+
+    <h3>The Request Journey</h3>
+    <p>Here's what happens when you visit a website:</p>
+    <ol style="color:var(--muted);font-size:0.9rem;line-height:2;padding-left:1.5rem;">
+      <li>Browser checks its <strong style="color:var(--text)">local cache</strong> for the IP of the domain</li>
+      <li>If not cached, asks your <strong style="color:var(--text)">ISP's DNS resolver</strong></li>
+      <li>DNS resolver walks the hierarchy to find the IP address</li>
+      <li>Browser opens a <strong style="color:var(--text)">TCP connection</strong> to that IP (port 80 for HTTP, 443 for HTTPS)</li>
+      <li>TLS handshake if HTTPS (encryption negotiation)</li>
+      <li>Browser sends an <strong style="color:var(--text)">HTTP GET request</strong></li>
+      <li>Server processes request, sends back HTML</li>
+      <li>Browser parses HTML, fetches CSS/JS, renders page</li>
+    </ol>
+
+    <div class="interview">
+      <strong>🎯 Interview Tip</strong>
+      "Walk me through what happens when you type google.com" is a classic warm-up. Know the DNS → TCP → TLS → HTTP flow cold.
+    </div>
+
+    <!-- DNS -->
+    <h2 id="dns">DNS Resolution</h2>
+    <p>DNS (Domain Name System) translates human-readable domain names into IP addresses. Think of it as the internet's phonebook.</p>
+
+    <h3>DNS Hierarchy</h3>
+    <p>DNS is hierarchical, not centralized. This makes it fast and resilient:</p>
+    <div class="example-box">
+      <div class="ex-label">Example: resolving "api.example.com"</div>
+      <h4>The 4-step resolver chain</h4>
+      <p><strong style="color:var(--accent)">Root nameservers</strong> → know where .com lives<br>
+      <strong style="color:var(--accent)">TLD nameservers</strong> (.com) → know where example.com's nameserver is<br>
+      <strong style="color:var(--accent)">Authoritative nameservers</strong> → know the actual IP for api.example.com<br>
+      Result is cached at every level (TTL controls how long)</p>
+    </div>
+
+    <h3>Key DNS Record Types</h3>
+    <p><code>A</code> — maps domain to IPv4 address<br>
+    <code>AAAA</code> — maps domain to IPv6 address<br>
+    <code>CNAME</code> — alias for another domain (used for CDNs)<br>
+    <code>MX</code> — mail server records<br>
+    <code>TXT</code> — arbitrary text (used for verification)</p>
+
+    <div class="tip">
+      <strong>Design insight:</strong> DNS can be used for simple load balancing (return multiple IPs, client picks one). This is called <strong>DNS round-robin</strong> but it's not truly load-aware.
+    </div>
+
+    <!-- HTTP -->
+    <h2 id="http">HTTP & HTTPS</h2>
+    <p>HTTP (HyperText Transfer Protocol) is the foundation of data communication on the web. It's a <strong>stateless, request-response protocol</strong>.</p>
+
+    <h3>HTTP Methods</h3>
+    <p><code>GET</code> — retrieve data (safe, idempotent)<br>
+    <code>POST</code> — create new resource (not idempotent)<br>
+    <code>PUT</code> — replace resource (idempotent)<br>
+    <code>PATCH</code> — partially update resource<br>
+    <code>DELETE</code> — remove resource (idempotent)</p>
+
+    <div class="highlight">
+      <strong>Idempotent</strong> means calling the same operation multiple times produces the same result. GET, PUT, DELETE are idempotent. POST is not — calling it twice creates two resources.
+    </div>
+
+    <h3>HTTP Status Codes You Must Know</h3>
+    <p><code>200</code> OK · <code>201</code> Created · <code>204</code> No Content<br>
+    <code>301</code> Moved Permanently · <code>302</code> Found (temporary redirect)<br>
+    <code>400</code> Bad Request · <code>401</code> Unauthorized · <code>403</code> Forbidden · <code>404</code> Not Found · <code>409</code> Conflict · <code>429</code> Too Many Requests<br>
+    <code>500</code> Internal Server Error · <code>502</code> Bad Gateway · <code>503</code> Service Unavailable · <code>504</code> Gateway Timeout</p>
+
+    <h3>HTTP Versions</h3>
+    <div class="compare">
+      <div class="compare-box">
+        <h4 style="color:var(--muted)">HTTP/1.1</h4>
+        <ul>
+          <li class="pro">Persistent connections</li>
+          <li class="con">Head-of-line blocking</li>
+          <li class="con">One request at a time per connection</li>
+        </ul>
+      </div>
+      <div class="compare-box">
+        <h4 style="color:var(--accent2)">HTTP/2</h4>
+        <ul>
+          <li class="pro">Multiplexing (many requests, one conn)</li>
+          <li class="pro">Header compression (HPACK)</li>
+          <li class="pro">Server push</li>
+        </ul>
+      </div>
+    </div>
+    <p><strong>HTTPS</strong> = HTTP + TLS. TLS encrypts the connection so nobody between you and the server can read the data. Every system you design should use HTTPS.</p>
+
+    <!-- TCP UDP -->
+    <h2 id="tcp-udp">TCP vs UDP</h2>
+    <p>These are the two main transport protocols. Choosing between them is a classic systems tradeoff.</p>
+
+    <div class="compare">
+      <div class="compare-box">
+        <h4 style="color:var(--accent)">TCP — Transmission Control Protocol</h4>
+        <ul>
+          <li class="pro">Reliable delivery (ACKs)</li>
+          <li class="pro">Ordered packets</li>
+          <li class="pro">Error correction</li>
+          <li class="pro">Flow & congestion control</li>
+          <li class="con">Higher latency (3-way handshake)</li>
+          <li class="con">More overhead</li>
+        </ul>
+        <p style="font-size:0.8rem;color:var(--muted);margin-top:0.75rem;">Use for: web, email, file transfer, databases</p>
+      </div>
+      <div class="compare-box">
+        <h4 style="color:var(--accent2)">UDP — User Datagram Protocol</h4>
+        <ul>
+          <li class="pro">Low latency</li>
+          <li class="pro">No connection setup</li>
+          <li class="pro">Broadcast support</li>
+          <li class="con">No delivery guarantee</li>
+          <li class="con">Packets can arrive out of order</li>
+          <li class="con">No error correction</li>
+        </ul>
+        <p style="font-size:0.8rem;color:var(--muted);margin-top:0.75rem;">Use for: gaming, video streaming, DNS, VoIP</p>
+      </div>
+    </div>
+
+    <div class="interview">
+      <strong>🎯 Interview Tip</strong>
+      "Why would you use UDP for video streaming?" — Because a dropped frame is better than waiting for a retransmit. Users accept slight quality loss but not freezing. This is the tradeoff mindset you need.
+    </div>
+
+    <!-- LATENCY -->
+    <h2 id="latency">Latency, Throughput & Bandwidth</h2>
+    <p>These three are the most cited numbers in system design. Know the difference and typical values.</p>
+
+    <h3>Definitions</h3>
+    <p><strong>Latency</strong> — time for a single request to complete (ms). Lower is better.<br>
+    <strong>Throughput</strong> — how many requests/operations per second a system handles. Higher is better.<br>
+    <strong>Bandwidth</strong> — maximum data transfer rate (Gbps). A ceiling, not a guarantee.</p>
+
+    <div class="example-box">
+      <div class="ex-label">Numbers Every Engineer Should Know</div>
+      <h4>Latency Hierarchy</h4>
+      <p>
+        L1 cache: ~0.5 ns · L2 cache: ~7 ns<br>
+        RAM access: ~100 ns<br>
+        SSD random read: ~150 µs<br>
+        HDD random read: ~10 ms<br>
+        Same datacenter roundtrip: ~0.5 ms<br>
+        Cross-region (e.g., US → EU): ~75 ms<br>
+        Cross-continental (US → Asia): ~150 ms
+      </p>
+    </div>
+
+    <div class="warn">
+      <strong>Key insight:</strong> Disk is ~20,000× slower than RAM. Network is ~1000× slower than RAM. This is why caching exists.
+    </div>
+
+    <h3>Little's Law</h3>
+    <p>A fundamental theorem in queuing theory: <code>L = λ × W</code></p>
+    <p>Where: L = number of items in system, λ = arrival rate, W = time each item spends in system. If throughput is 1000 req/s and average latency is 50ms, then 50 requests are "in flight" at any time.</p>
+
+    <!-- SCALING -->
+    <h2 id="scaling">Vertical vs Horizontal Scaling</h2>
+    <p>When a system can't handle more traffic, you scale it. There are two directions.</p>
+
+    <div class="compare">
+      <div class="compare-box">
+        <h4 style="color:var(--gold)">Vertical Scaling (Scale Up)</h4>
+        <ul>
+          <li class="pro">Simple — no code changes</li>
+          <li class="pro">No distributed system complexity</li>
+          <li class="pro">Strong consistency</li>
+          <li class="con">Has a hardware ceiling</li>
+          <li class="con">Single point of failure</li>
+          <li class="con">Expensive at high-end</li>
+        </ul>
+        <p style="font-size:0.8rem;color:var(--muted);margin-top:0.75rem;">Add more CPU/RAM/SSD to existing machine</p>
+      </div>
+      <div class="compare-box">
+        <h4 style="color:var(--accent2)">Horizontal Scaling (Scale Out)</h4>
+        <ul>
+          <li class="pro">No theoretical ceiling</li>
+          <li class="pro">Fault tolerant (no single server)</li>
+          <li class="pro">Cost-effective at scale</li>
+          <li class="con">Requires load balancing</li>
+          <li class="con">Session/state management complexity</li>
+          <li class="con">Distributed system problems</li>
+        </ul>
+        <p style="font-size:0.8rem;color:var(--muted);margin-top:0.75rem;">Add more machines, split the load</p>
+      </div>
+    </div>
+
+    <div class="highlight">
+      <strong>Industry practice:</strong> Most systems start vertical (easier), then switch to horizontal when they hit limits or need high availability. Large companies like Google, Facebook horizontally scale everything.
+    </div>
+
+    <!-- DISTRIBUTED -->
+    <h2 id="distributed">What is a Distributed System?</h2>
+    <p>A distributed system is a collection of independent computers that appear to users as a single coherent system. The computers communicate over a network.</p>
+
+    <h3>Why build distributed systems?</h3>
+    <p>Three main reasons:</p>
+    <p>1. <strong>Scale</strong> — one machine can't handle Netflix's traffic<br>
+    2. <strong>Reliability</strong> — if one server dies, others keep serving<br>
+    3. <strong>Geography</strong> — serve users from the nearest datacenter</p>
+
+    <div class="tip">
+      <strong>The core challenge:</strong> In a distributed system, things fail independently. Networks drop packets. Servers crash. Clocks drift. Your system must handle partial failure gracefully.
+    </div>
+
+    <!-- FALLACIES -->
+    <h2 id="fallacies">The 8 Fallacies of Distributed Computing</h2>
+    <p>Peter Deutsch and James Gosling (Sun Microsystems) identified 8 assumptions developers incorrectly make about distributed systems. Know these — they explain 90% of distributed system bugs.</p>
+
+    <ol style="color:var(--muted);font-size:0.88rem;line-height:2.2;padding-left:1.5rem;">
+      <li><strong style="color:var(--text)">The network is reliable</strong> — It isn't. Packets drop. Connections time out.</li>
+      <li><strong style="color:var(--text)">Latency is zero</strong> — Every network call takes time. Design for it.</li>
+      <li><strong style="color:var(--text)">Bandwidth is infinite</strong> — Bandwidth costs money and has limits.</li>
+      <li><strong style="color:var(--text)">The network is secure</strong> — Always encrypt. Always validate.</li>
+      <li><strong style="color:var(--text)">Topology doesn't change</strong> — Servers are added/removed constantly.</li>
+      <li><strong style="color:var(--text)">There is one administrator</strong> — Many teams, many policies, many failures.</li>
+      <li><strong style="color:var(--text)">Transport cost is zero</strong> — Serialization, network hops cost CPU and time.</li>
+      <li><strong style="color:var(--text)">The network is homogeneous</strong> — Many different hardware, OS, languages.</li>
+    </ol>
+
+    <div class="interview">
+      <strong>🎯 Interview Tip</strong>
+      When designing a system, always ask: "What happens when this network call fails?" If you don't have an answer, your design is incomplete. Interviewers at product companies specifically probe failure modes.
+    </div>
+
+    <div class="nav-bottom">
+      <a href="index.html" class="nav-btn">← Home</a>
+      <a href="components.html" class="nav-btn next">Next: Core Components →</a>
+    </div>
+  </main>
+</div>
+
+
+<footer style="border-top:1px solid var(--border);padding:1.5rem 2rem;text-align:center;color:var(--dim);font-size:0.8rem;margin-top:2rem;">
+  <p>SystemCraft &nbsp;&middot;&nbsp; <a href="index.html" style="color:var(--muted);text-decoration:none;">Home</a> &nbsp;&middot;&nbsp; <a href="fundamentals.html" style="color:var(--muted);text-decoration:none;">Fundamentals</a> &nbsp;&middot;&nbsp; <a href="components.html" style="color:var(--muted);text-decoration:none;">Components</a> &nbsp;&middot;&nbsp; <a href="patterns.html" style="color:var(--muted);text-decoration:none;">Patterns</a> &nbsp;&middot;&nbsp; <a href="advanced.html" style="color:var(--muted);text-decoration:none;">Advanced</a> &nbsp;&middot;&nbsp; <a href="interview.html" style="color:var(--muted);text-decoration:none;">Interview Prep</a></p>
+</footer>
+<script>
+const sidebarLinks = document.querySelectorAll(".sidebar a[href^='#']");
+const observer = new IntersectionObserver((entries) => {
+  entries.forEach(e => {
+    if (e.isIntersecting) {
+      sidebarLinks.forEach(l => l.classList.remove("active"));
+      const match = document.querySelector(".sidebar a[href='#" + e.target.id + "']");
+      if (match) match.classList.add("active");
+    }
+  });
+}, { rootMargin: "-20% 0px -70% 0px" });
+document.querySelectorAll("h2[id]").forEach(el => observer.observe(el));
+</script>
+
+</body>
+</html>

@@ -1,0 +1,581 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Interview Prep — SystemCraft</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;1,9..40,300&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root{--bg:#0a0a0f;--bg2:#111118;--bg3:#1a1a25;--card:#13131e;--border:rgba(255,255,255,0.07);--accent:#6c63ff;--accent2:#00d4aa;--accent3:#ff6b6b;--gold:#f5c842;--text:#e8e8f0;--muted:#888899;--dim:#444458;}
+  *{margin:0;padding:0;box-sizing:border-box;}html{scroll-behavior:smooth;}
+  body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);line-height:1.6;}
+  nav{position:fixed;top:0;left:0;right:0;z-index:100;background:rgba(10,10,15,0.92);backdrop-filter:blur(16px);border-bottom:1px solid var(--border);padding:0 2rem;display:flex;align-items:center;justify-content:space-between;height:60px;}
+  .logo{font-family:'Syne',sans-serif;font-weight:800;font-size:1.3rem;color:#fff;text-decoration:none;}
+  .logo span{color:var(--accent);}
+  .nav-links{display:flex;gap:0.25rem;}
+  .nav-links a{color:var(--muted);text-decoration:none;font-size:0.85rem;font-weight:500;padding:0.4rem 0.75rem;border-radius:6px;transition:all 0.2s;}
+  .nav-links a:hover,.nav-links a.active{color:#fff;background:rgba(255,255,255,0.06);}
+  .nav-cta{background:var(--accent);color:#fff;padding:0.4rem 1rem;border-radius:6px;text-decoration:none;font-size:0.85rem;font-weight:600;}
+  .page-wrap{display:grid;grid-template-columns:240px 1fr;min-height:100vh;padding-top:60px;}
+  .sidebar{position:sticky;top:60px;height:calc(100vh - 60px);overflow-y:auto;border-right:1px solid var(--border);padding:1.5rem 1rem;background:var(--bg2);}
+  .sidebar-label{font-size:0.7rem;font-weight:700;color:var(--dim);letter-spacing:1.5px;text-transform:uppercase;padding:0 0.5rem;margin-bottom:0.5rem;margin-top:1rem;}
+  .sidebar-label:first-child{margin-top:0;}
+  .sidebar a{display:block;padding:0.4rem 0.5rem;font-size:0.83rem;color:var(--muted);text-decoration:none;border-radius:6px;transition:all 0.15s;}
+  .sidebar a:hover{color:#fff;background:rgba(255,255,255,0.05);}
+  .sidebar a.active{color:#fff;background:rgba(108,99,255,0.15);font-weight:500;}
+  .content{padding:3rem 4rem;max-width:820px;}
+  .page-badge{display:inline-flex;align-items:center;gap:6px;background:rgba(108,99,255,0.1);border:1px solid rgba(108,99,255,0.25);color:#a89fff;padding:0.3rem 0.8rem;border-radius:100px;font-size:0.78rem;font-weight:500;margin-bottom:1.5rem;}
+  h1{font-family:'Syne',sans-serif;font-weight:800;font-size:2.4rem;color:#fff;letter-spacing:-1.5px;line-height:1.1;margin-bottom:0.75rem;}
+  .intro{font-size:1.05rem;color:var(--muted);line-height:1.75;margin-bottom:2.5rem;max-width:640px;}
+  h2{font-family:'Syne',sans-serif;font-weight:700;font-size:1.5rem;color:#fff;letter-spacing:-0.5px;margin:2.5rem 0 1rem;padding-top:1rem;border-top:1px solid var(--border);}
+  h2:first-of-type{border-top:none;margin-top:0;}
+  h3{font-family:'Syne',sans-serif;font-weight:600;font-size:1.05rem;color:#fff;margin:1.5rem 0 0.5rem;}
+  p{color:var(--muted);line-height:1.75;margin-bottom:1rem;font-size:0.93rem;}
+  strong{color:var(--text);}
+  ul,ol{color:var(--muted);font-size:0.9rem;line-height:2;padding-left:1.5rem;margin-bottom:1rem;}
+  .highlight{background:var(--bg3);border-left:3px solid var(--accent);border-radius:0 8px 8px 0;padding:1rem 1.25rem;margin:1.25rem 0;font-size:0.875rem;color:var(--text);}
+  .highlight strong{color:var(--accent);}
+  .tip{background:rgba(0,212,170,0.06);border-left:3px solid var(--accent2);border-radius:0 8px 8px 0;padding:1rem 1.25rem;margin:1.25rem 0;font-size:0.875rem;color:var(--text);}
+  .tip strong{color:var(--accent2);}
+  .interview{background:rgba(255,107,107,0.06);border-left:3px solid var(--accent3);border-radius:0 8px 8px 0;padding:1rem 1.25rem;margin:1.25rem 0;font-size:0.875rem;}
+  .interview strong{color:var(--accent3);display:block;margin-bottom:0.25rem;font-size:0.75rem;letter-spacing:1px;text-transform:uppercase;}
+  code{font-family:'DM Mono',monospace;background:rgba(255,255,255,0.07);padding:0.15rem 0.4rem;border-radius:4px;font-size:0.83rem;color:var(--accent2);}
+
+  /* FRAMEWORK STEPS */
+  .framework{counter-reset:steps;}
+  .step{display:flex;gap:1.25rem;margin-bottom:1.5rem;padding-bottom:1.5rem;border-bottom:1px solid var(--border);}
+  .step:last-child{border-bottom:none;margin-bottom:0;padding-bottom:0;}
+  .step-num{width:36px;height:36px;border-radius:8px;background:rgba(108,99,255,0.15);border:1px solid rgba(108,99,255,0.3);display:flex;align-items:center;justify-content:center;font-family:'Syne',sans-serif;font-weight:800;font-size:0.9rem;color:var(--accent);flex-shrink:0;}
+  .step-content h4{font-family:'Syne',sans-serif;font-size:0.95rem;font-weight:700;color:#fff;margin-bottom:0.35rem;}
+  .step-content p{font-size:0.83rem;margin:0;}
+
+  /* QUESTION CARDS */
+  .q-card{background:var(--card);border:1px solid var(--border);border-radius:12px;margin-bottom:1.5rem;overflow:hidden;}
+  .q-header{padding:1.25rem 1.5rem;display:flex;align-items:center;justify-content:space-between;cursor:pointer;transition:background 0.2s;}
+  .q-header:hover{background:#1c1c2e;}
+  .q-title{font-family:'Syne',sans-serif;font-weight:700;font-size:1rem;color:#fff;}
+  .q-tags{display:flex;gap:0.4rem;}
+  .tag{font-size:0.68rem;font-weight:600;padding:0.2rem 0.5rem;border-radius:4px;letter-spacing:0.5px;}
+  .tag-green{background:rgba(0,212,170,0.12);color:var(--accent2);}
+  .tag-orange{background:rgba(255,160,50,0.12);color:#ffa032;}
+  .tag-red{background:rgba(255,107,107,0.12);color:var(--accent3);}
+  .tag-purple{background:rgba(108,99,255,0.12);color:var(--accent);}
+  .q-body{padding:0 1.5rem 1.5rem;display:none;}
+  .q-body.open{display:block;}
+  .q-section{margin-top:1rem;}
+  .q-section-label{font-size:0.7rem;font-weight:700;color:var(--accent);letter-spacing:1.5px;text-transform:uppercase;margin-bottom:0.5rem;}
+  .q-section p{font-size:0.83rem;margin-bottom:0.5rem;}
+  .q-section ul{font-size:0.83rem;margin:0;}
+  .toggle-icon{color:var(--muted);font-size:1.2rem;transition:transform 0.2s;}
+  .open .toggle-icon{transform:rotate(45deg);}
+
+  /* DO DON'T */
+  .do-dont{display:grid;grid-template-columns:1fr 1fr;gap:1rem;margin:1.25rem 0;}
+  .do-box{background:rgba(0,212,170,0.05);border:1px solid rgba(0,212,170,0.15);border-radius:10px;padding:1.25rem;}
+  .dont-box{background:rgba(255,107,107,0.05);border:1px solid rgba(255,107,107,0.15);border-radius:10px;padding:1.25rem;}
+  .do-box h4{color:var(--accent2);font-family:'Syne',sans-serif;font-size:0.9rem;font-weight:700;margin-bottom:0.75rem;}
+  .dont-box h4{color:var(--accent3);font-family:'Syne',sans-serif;font-size:0.9rem;font-weight:700;margin-bottom:0.75rem;}
+  .do-box ul,.dont-box ul{list-style:none;padding:0;margin:0;}
+  .do-box li,.dont-box li{font-size:0.82rem;color:var(--muted);padding:0.3rem 0;display:flex;gap:0.5rem;border-bottom:1px solid rgba(255,255,255,0.03);}
+  .do-box li:last-child,.dont-box li:last-child{border-bottom:none;}
+  .do-box li::before{content:'✓';color:var(--accent2);}
+  .dont-box li::before{content:'✗';color:var(--accent3);}
+
+  .nav-bottom{display:flex;justify-content:space-between;align-items:center;margin-top:3rem;padding-top:2rem;border-top:1px solid var(--border);}
+  .nav-btn{display:inline-flex;align-items:center;gap:0.5rem;padding:0.6rem 1.1rem;border-radius:8px;font-size:0.85rem;font-weight:600;text-decoration:none;border:1px solid var(--border);color:var(--muted);transition:all 0.2s;}
+  .nav-btn:hover{color:#fff;border-color:rgba(255,255,255,0.2);}
+  .nav-btn.primary{background:var(--accent);border-color:var(--accent);color:#fff;}
+  .nav-btn.primary:hover{background:#7a72ff;}
+
+  .estimate-grid{display:grid;grid-template-columns:1fr 1fr;gap:1rem;margin:1rem 0;}
+  .est-box{background:var(--card);border:1px solid var(--border);border-radius:8px;padding:1rem;}
+  .est-box h4{font-family:'DM Mono',monospace;font-size:0.78rem;color:var(--accent2);margin-bottom:0.4rem;}
+  .est-box p{font-size:0.8rem;margin:0;}
+
+  @media(max-width:900px){.page-wrap{grid-template-columns:1fr;}.sidebar{display:none;}.content{padding:2rem 1.5rem;}.do-dont{grid-template-columns:1fr;}.estimate-grid{grid-template-columns:1fr;}}
+</style>
+</head>
+<body>
+<nav>
+  <a class="logo" href="index.html">System<span>Craft</span></a>
+  <div class="nav-links">
+    <a href="index.html">Home</a>
+    <a href="fundamentals.html">Fundamentals</a>
+    <a href="components.html">Components</a>
+    <a href="patterns.html">Patterns</a>
+    <a href="advanced.html">Advanced</a>
+    <a href="interview.html" class="active">Interview Prep</a>
+    <a href="cheatsheet.html">Cheatsheet</a>
+  </div>
+  <a class="nav-cta" href="index.html">← Back to Start</a>
+</nav>
+
+<div class="page-wrap">
+  <aside class="sidebar">
+    <div class="sidebar-label">Framework</div>
+    <a href="#framework" class="active">The 6-Step Framework</a>
+    <a href="#estimation">Back-of-Envelope Math</a>
+    <a href="#dos-donts">Do's & Don'ts</a>
+    <div class="sidebar-label">Questions</div>
+    <a href="#url-shortener">URL Shortener</a>
+    <a href="#instagram">Instagram</a>
+    <a href="#whatsapp">WhatsApp</a>
+    <a href="#netflix">Netflix</a>
+    <a href="#uber">Uber</a>
+    <a href="#twitter">Twitter Feed</a>
+    <a href="#google-search">Google Search</a>
+    <a href="#youtube">YouTube</a>
+    <a href="#rate-limiter">Rate Limiter</a>
+    <a href="#key-value">Key-Value Store</a>
+  </aside>
+
+  <main class="content">
+    <div class="page-badge">🎯 Interview Prep · All Levels</div>
+    <h1>Interview Prep</h1>
+    <p class="intro">System design interviews are about demonstrating structured thinking, knowing tradeoffs, and communicating clearly. This section gives you a repeatable framework and walks through 10+ full interview questions.</p>
+
+    <!-- FRAMEWORK -->
+    <h2 id="framework">The 6-Step Framework</h2>
+    <p>Every system design interview should follow this structure. It shows discipline and ensures you don't miss anything important.</p>
+
+    <div class="framework">
+      <div class="step">
+        <div class="step-num">1</div>
+        <div class="step-content">
+          <h4>Clarify Requirements (3–5 min)</h4>
+          <p>Ask questions before designing. What features are in scope? Who are the users? What scale? Read-heavy or write-heavy? What are the latency requirements? Never assume — confirm. Write the requirements on the whiteboard.</p>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-num">2</div>
+        <div class="step-content">
+          <h4>Estimate Scale (2–3 min)</h4>
+          <p>Back-of-envelope calculations: DAU, requests per second, storage needed, bandwidth. This drives your architecture decisions. Mention if you're estimating QPS, storage, or memory. Don't skip this — it shows engineering sense.</p>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-num">3</div>
+        <div class="step-content">
+          <h4>High-Level Design (10 min)</h4>
+          <p>Draw the big boxes: client → CDN → load balancer → API servers → cache → databases. Cover the main data flow. Get the interviewer's buy-in before diving deep. Don't detail every component yet.</p>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-num">4</div>
+        <div class="step-content">
+          <h4>Define the Data Model (5 min)</h4>
+          <p>What are the main entities? What does each table/document look like? What's the primary key? What indexes do you need? What's your read/write pattern? This often reveals your database choice.</p>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-num">5</div>
+        <div class="step-content">
+          <h4>Deep Dive (15 min)</h4>
+          <p>Pick 2–3 critical/interesting components and go deep. Likely prompted by the interviewer. This is where you show expertise: sharding strategy, caching layer, consistency model, specific algorithms. Discuss tradeoffs.</p>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-num">6</div>
+        <div class="step-content">
+          <h4>Address Bottlenecks & Failures (5 min)</h4>
+          <p>What are the single points of failure? What happens if the database goes down? What's the hotspot risk? How do you handle a viral moment? Show you can think about operational concerns, not just happy-path design.</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- ESTIMATION -->
+    <h2 id="estimation">Back-of-Envelope Estimation</h2>
+    <p>Interviewers want to see you estimate confidently. These numbers are your vocabulary:</p>
+
+    <div class="estimate-grid">
+      <div class="est-box">
+        <h4>Time Conversions</h4>
+        <p>1 day = 86,400 sec ≈ 100K sec<br>
+        1 month = 2.5M sec<br>
+        1 year = 30M sec</p>
+      </div>
+      <div class="est-box">
+        <h4>Data Sizes</h4>
+        <p>char = 1B · int = 4B · long = 8B<br>
+        image ≈ 300KB · video/min ≈ 50MB<br>
+        tweet ≈ 280B</p>
+      </div>
+      <div class="est-box">
+        <h4>QPS from DAU</h4>
+        <p>If 100M DAU, each makes 5 req/day:<br>
+        500M req/day ÷ 100K sec = 5000 QPS<br>
+        Peak ≈ 2–3× = 10–15K QPS</p>
+      </div>
+      <div class="est-box">
+        <h4>Storage</h4>
+        <p>Twitter: 100M tweets/day<br>
+        = 100M × 280B ≈ 28GB/day<br>
+        = ~10TB/year (just text)</p>
+      </div>
+    </div>
+
+    <div class="tip">
+      <strong>Tip:</strong> Round aggressively. Say "approximately 10K QPS" not "9,847 QPS." Estimation is about order-of-magnitude thinking, not precision. Justify your assumptions out loud.
+    </div>
+
+    <!-- DO DONT -->
+    <h2 id="dos-donts">Do's & Don'ts</h2>
+
+    <div class="do-dont">
+      <div class="do-box">
+        <h4>✅ Do</h4>
+        <ul>
+          <li>Ask clarifying questions first</li>
+          <li>Think out loud — share your reasoning</li>
+          <li>State tradeoffs explicitly</li>
+          <li>Start simple, then evolve</li>
+          <li>Acknowledge what you don't know</li>
+          <li>Draw a diagram (even rough)</li>
+          <li>Check in with interviewer</li>
+          <li>Mention failure scenarios</li>
+        </ul>
+      </div>
+      <div class="dont-box">
+        <h4>❌ Don't</h4>
+        <ul>
+          <li>Jump to coding immediately</li>
+          <li>Choose a DB without justification</li>
+          <li>Design everything in detail first</li>
+          <li>Ignore scale entirely</li>
+          <li>Claim everything is perfect</li>
+          <li>Forget about security</li>
+          <li>Use buzzwords without explaining them</li>
+          <li>Stay silent for too long</li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- QUESTIONS -->
+    <h2>Interview Questions — Full Walkthroughs</h2>
+    <p>Click any question to expand the full walkthrough. Each follows the 6-step framework.</p>
+
+    <!-- URL SHORTENER -->
+    <div class="q-card" id="url-shortener">
+      <div class="q-header" onclick="toggle(this)">
+        <div class="q-title">Design a URL Shortener (like bit.ly)</div>
+        <div style="display:flex;align-items:center;gap:0.75rem;">
+          <div class="q-tags"><span class="tag tag-green">Beginner</span><span class="tag tag-purple">Classic</span></div>
+          <span class="toggle-icon">+</span>
+        </div>
+      </div>
+      <div class="q-body">
+        <div class="q-section">
+          <div class="q-section-label">Requirements</div>
+          <p><strong>Functional:</strong> Given a long URL, return a short URL. Given a short URL, redirect to original. Optional: custom aliases, expiry.</p>
+          <p><strong>Non-functional:</strong> 100M URLs/day, 10:1 read:write ratio, low latency redirect (&lt;10ms), high availability.</p>
+        </div>
+        <div class="q-section">
+          <div class="q-section-label">Scale Estimation</div>
+          <p>Writes: 100M/day = ~1200 QPS. Reads: 1.2B/day = 12K QPS. Storage: 100M/day × 500B/URL × 10 years = ~500GB total. Manageable.</p>
+        </div>
+        <div class="q-section">
+          <div class="q-section-label">Key Design Decisions</div>
+          <ul>
+            <li><strong>Hash generation:</strong> Use MD5 or SHA256, take first 7 chars (62⁷ ≈ 3.5 trillion combinations). Collision? Append counter and retry.</li>
+            <li><strong>Database:</strong> NoSQL (Cassandra or DynamoDB) — simple key-value lookups, horizontally scalable.</li>
+            <li><strong>Caching:</strong> Redis cache for hot URLs (80% of reads are on 20% of URLs). Cache with TTL. Reduces DB load dramatically.</li>
+            <li><strong>Redirect:</strong> 301 (permanent) = browser caches, less server load. 302 (temporary) = tracks every click, more analytics data.</li>
+            <li><strong>Custom aliases:</strong> Allow user to specify shortcode. Check availability in DB first. Use read-your-own-writes consistency.</li>
+          </ul>
+        </div>
+        <div class="q-section">
+          <div class="q-section-label">Data Model</div>
+          <p>Table: <code>urls(short_code PK, original_url, user_id, created_at, expires_at)</code>. Index on original_url if we need reverse lookup (check if long URL already shortened).</p>
+        </div>
+        <div class="q-section">
+          <div class="q-section-label">Interview Tip</div>
+          <p>If asked about unique ID generation at scale: use a distributed ID generator (Twitter Snowflake, or pre-generate a pool of IDs). Avoid auto-increment across distributed nodes — they conflict.</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- INSTAGRAM -->
+    <div class="q-card" id="instagram">
+      <div class="q-header" onclick="toggle(this)">
+        <div class="q-title">Design Instagram (photo sharing)</div>
+        <div style="display:flex;align-items:center;gap:0.75rem;">
+          <div class="q-tags"><span class="tag tag-orange">Intermediate</span><span class="tag tag-purple">Popular</span></div>
+          <span class="toggle-icon">+</span>
+        </div>
+      </div>
+      <div class="q-body">
+        <div class="q-section">
+          <div class="q-section-label">Core Features</div>
+          <p>Upload photos/videos. Follow users. View news feed. Like and comment. Search.</p>
+        </div>
+        <div class="q-section">
+          <div class="q-section-label">Key Architecture Decisions</div>
+          <ul>
+            <li><strong>Photo storage:</strong> Store photos in object storage (S3), not in the database. DB stores metadata (URL, size, user_id, timestamp).</li>
+            <li><strong>CDN:</strong> Serve photos from CDN edge nodes. Users around the world get photos from the nearest server. Critical for latency.</li>
+            <li><strong>News feed:</strong> Use fanout-on-write for most users (pre-computed feeds in Redis). Use fanout-on-read for users with huge followings (celebrities). Merge at read time.</li>
+            <li><strong>Database:</strong> PostgreSQL for users, follows, comments. Cassandra for activity feeds (high write throughput). Both used at Instagram historically.</li>
+            <li><strong>Search:</strong> Elasticsearch for hashtag/user search. Not the primary DB.</li>
+          </ul>
+        </div>
+        <div class="q-section">
+          <div class="q-section-label">Bottlenecks to Address</div>
+          <ul>
+            <li>Photo upload: async processing — return immediately, process in background (generate thumbnails via Kafka/Lambda)</li>
+            <li>Feed generation: pre-compute vs lazy. Use a hybrid based on follower count</li>
+            <li>Hot content: popular posts get cached aggressively in Redis with high TTL</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <!-- WHATSAPP -->
+    <div class="q-card" id="whatsapp">
+      <div class="q-header" onclick="toggle(this)">
+        <div class="q-title">Design WhatsApp (chat system)</div>
+        <div style="display:flex;align-items:center;gap:0.75rem;">
+          <div class="q-tags"><span class="tag tag-orange">Intermediate</span><span class="tag tag-purple">Classic</span></div>
+          <span class="toggle-icon">+</span>
+        </div>
+      </div>
+      <div class="q-body">
+        <div class="q-section">
+          <div class="q-section-label">Requirements</div>
+          <p><strong>Functional:</strong> 1:1 and group messaging, media (images, video), message delivery status (sent/delivered/read), online presence.</p>
+          <p><strong>Scale:</strong> 2B users, 100B messages/day ≈ 1M QPS.</p>
+        </div>
+        <div class="q-section">
+          <div class="q-section-label">Key Design Decisions</div>
+          <ul>
+            <li><strong>WebSocket vs HTTP polling:</strong> Use persistent WebSocket connections for real-time bidirectional communication. HTTP polling is too slow and wasteful. Server can push messages to client instantly.</li>
+            <li><strong>Chat servers:</strong> Each client maintains a WebSocket with a chat server. A session service maps user_id → chat_server. Message routing: sender → sender's chat server → look up recipient's chat server → push message.</li>
+            <li><strong>Message storage:</strong> HBase (wide-column, high write throughput). Schema: <code>(user_id, conversation_id, timestamp, message_id, content)</code>. Time-ordered within conversation.</li>
+            <li><strong>Offline delivery:</strong> If recipient is offline, store message in a "pending" queue. On connection, push pending messages. Use message_id to avoid duplicates.</li>
+            <li><strong>End-to-end encryption:</strong> Signal Protocol. Keys stored on device only. Server never sees plaintext. Mention this — shows security awareness.</li>
+            <li><strong>Media:</strong> Upload to S3, send URL in message. CDN delivers media to recipient. Don't put binary blobs in message DB.</li>
+          </ul>
+        </div>
+        <div class="q-section">
+          <div class="q-section-label">Group Chats</div>
+          <p>Group chat is fanout problem. For small groups (&lt;100): send individual messages to each member's inbox. For large groups: use Pub/Sub — members subscribe to group topic in Kafka/Redis.</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- NETFLIX -->
+    <div class="q-card" id="netflix">
+      <div class="q-header" onclick="toggle(this)">
+        <div class="q-title">Design Netflix (video streaming)</div>
+        <div style="display:flex;align-items:center;gap:0.75rem;">
+          <div class="q-tags"><span class="tag tag-red">Advanced</span><span class="tag tag-purple">Popular</span></div>
+          <span class="toggle-icon">+</span>
+        </div>
+      </div>
+      <div class="q-body">
+        <div class="q-section">
+          <div class="q-section-label">Scale</div>
+          <p>220M subscribers. 15% of global internet traffic. Need to serve 4K video to millions simultaneously with minimal buffering.</p>
+        </div>
+        <div class="q-section">
+          <div class="q-section-label">Key Architecture Decisions</div>
+          <ul>
+            <li><strong>Video storage & CDN:</strong> Raw videos on S3. Transcoded into multiple formats/resolutions (adaptive bitrate) and pushed to Netflix's Open Connect CDN. ISPs host CDN appliances in their networks — video comes from next door, not across the internet.</li>
+            <li><strong>Adaptive Bitrate Streaming (ABR):</strong> Client requests chunks of video. If network is slow, it downgrades quality (720p → 480p). If fast, upgrades. Uses DASH or HLS protocol.</li>
+            <li><strong>Video processing pipeline:</strong> Original video → Kafka → transcoding workers → multiple quality versions → CDN. Fully async, parallelized.</li>
+            <li><strong>Recommendation engine:</strong> Apache Spark for batch ML. Feature store for real-time features. Recommendations precomputed nightly and cached.</li>
+            <li><strong>Metadata service:</strong> Microservices for titles, search, user profiles. Cassandra for watch history (time-series, high write).</li>
+            <li><strong>Chaos Engineering:</strong> Netflix invented Chaos Monkey — randomly kills production servers to test resilience. Your design should be resilient to this.</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <!-- UBER -->
+    <div class="q-card" id="uber">
+      <div class="q-header" onclick="toggle(this)">
+        <div class="q-title">Design Uber (ride sharing)</div>
+        <div style="display:flex;align-items:center;gap:0.75rem;">
+          <div class="q-tags"><span class="tag tag-red">Advanced</span><span class="tag tag-purple">Classic</span></div>
+          <span class="toggle-icon">+</span>
+        </div>
+      </div>
+      <div class="q-body">
+        <div class="q-section">
+          <div class="q-section-label">Core Problem</div>
+          <p>Match riders with nearby drivers in real-time. Track driver locations. Handle trip lifecycle. All at global scale, low latency.</p>
+        </div>
+        <div class="q-section">
+          <div class="q-section-label">Key Design Decisions</div>
+          <ul>
+            <li><strong>Location tracking:</strong> Drivers send GPS location every 5 seconds via WebSocket/HTTP. This is ~500K updates/sec for Uber's scale. Store in Redis (fast, ephemeral) not a DB. Use geospatial indexing (Redis GEOADD, GEORADIUS commands).</li>
+            <li><strong>Driver matching:</strong> When rider requests: query Redis for drivers within radius (geospatial query). Filter by availability. Rank by estimated pickup time. This is the dispatch service — extremely latency-sensitive.</li>
+            <li><strong>Geohashing:</strong> Divide the world into a grid of cells (geohash). Drivers in a cell are stored together. Querying nearby drivers = querying current cell + adjacent cells. Efficient and scalable.</li>
+            <li><strong>Trip service:</strong> Manages trip lifecycle (requested → accepted → started → completed). Saga pattern for state transitions. Stores in PostgreSQL (ACID needed for financial aspects).</li>
+            <li><strong>Surge pricing:</strong> Pub/Sub consumer on trip_requested events. Real-time supply/demand calculation per geohash. Updates pricing for that area.</li>
+            <li><strong>Notifications:</strong> Push notifications (APNs/FCM) for match found, driver arriving, etc. Via dedicated notification service fed by Kafka events.</li>
+          </ul>
+        </div>
+        <div class="q-section">
+          <div class="q-section-label">Interview Tip</div>
+          <p>Geohashing and geospatial queries are the key technical insight here. If you know Redis GEORADIUS and geohash concepts, say so — it shows depth.</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- TWITTER FEED -->
+    <div class="q-card" id="twitter">
+      <div class="q-header" onclick="toggle(this)">
+        <div class="q-title">Design Twitter (social media feed)</div>
+        <div style="display:flex;align-items:center;gap:0.75rem;">
+          <div class="q-tags"><span class="tag tag-orange">Intermediate</span><span class="tag tag-purple">Classic</span></div>
+          <span class="toggle-icon">+</span>
+        </div>
+      </div>
+      <div class="q-body">
+        <div class="q-section">
+          <div class="q-section-label">The Core Problem</div>
+          <p>Users post tweets. Users follow each other. When you open Twitter, you see a feed of recent tweets from everyone you follow — in the right order, fast.</p>
+        </div>
+        <div class="q-section">
+          <div class="q-section-label">Key Design: Feed Generation</div>
+          <ul>
+            <li><strong>Naive approach:</strong> On feed load, query tweets from all followed users, merge, sort by time. Problem: if you follow 1000 people, that's 1000 DB queries merged in real-time. Too slow.</li>
+            <li><strong>Fanout-on-write (push):</strong> When user posts, immediately push tweet_id to all followers' feed lists in Redis. Feed load = single Redis list read. Fast reads, slow writes for popular users (Lady Gaga's tweet fans out to 100M users).</li>
+            <li><strong>Hybrid:</strong> Fanout-on-write for users with &lt;1M followers. Fanout-on-read for celebrities. At read time, merge the user's pre-computed feed with real-time queries to celebrities they follow. Twitter uses this approach.</li>
+            <li><strong>Data model:</strong> <code>tweets(id, user_id, text, created_at, media_url)</code>. <code>follows(follower_id, followee_id)</code>. Redis sorted set for feeds: key = user_id, score = timestamp, member = tweet_id.</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <!-- GOOGLE SEARCH -->
+    <div class="q-card" id="google-search">
+      <div class="q-header" onclick="toggle(this)">
+        <div class="q-title">Design a Web Crawler & Search Engine</div>
+        <div style="display:flex;align-items:center;gap:0.75rem;">
+          <div class="q-tags"><span class="tag tag-red">Advanced</span><span class="tag tag-purple">Senior</span></div>
+          <span class="toggle-icon">+</span>
+        </div>
+      </div>
+      <div class="q-body">
+        <div class="q-section">
+          <div class="q-section-label">Crawler Design</div>
+          <ul>
+            <li><strong>Seed URLs → URL Frontier:</strong> Priority queue of URLs to crawl. Prioritize by PageRank, freshness, domain.</li>
+            <li><strong>Distributed fetchers:</strong> Multiple workers fetch URLs in parallel. Respect robots.txt. Rate limit per domain (don't DDoS).</li>
+            <li><strong>Deduplication:</strong> Bloom filter to skip already-crawled URLs. Hash content to skip duplicate pages (same content, different URL).</li>
+            <li><strong>Storage:</strong> Raw HTML in object storage. Extracted links back to URL frontier. Extracted text to indexing pipeline.</li>
+          </ul>
+        </div>
+        <div class="q-section">
+          <div class="q-section-label">Search Index</div>
+          <ul>
+            <li><strong>Inverted index:</strong> Maps word → list of (doc_id, positions). "apple" → [(doc1, [5,20]), (doc2, [3])]. Built by MapReduce over crawled pages.</li>
+            <li><strong>Serving:</strong> Query → tokenize → look up each word in inverted index → intersect result sets → rank by relevance → return top K.</li>
+            <li><strong>Ranking:</strong> PageRank (link graph), TF-IDF (term frequency), freshness, click-through rate, semantic similarity.</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <!-- YOUTUBE -->
+    <div class="q-card" id="youtube">
+      <div class="q-header" onclick="toggle(this)">
+        <div class="q-title">Design YouTube (video platform)</div>
+        <div style="display:flex;align-items:center;gap:0.75rem;">
+          <div class="q-tags"><span class="tag tag-orange">Intermediate</span></div>
+          <span class="toggle-icon">+</span>
+        </div>
+      </div>
+      <div class="q-body">
+        <div class="q-section">
+          <div class="q-section-label">Upload Flow</div>
+          <p>Client uploads video → API server streams to raw storage (S3) → publishes "video uploaded" event to Kafka → Transcoding workers consume event → generate multiple resolutions → push to CDN → update video metadata DB to status=available → notify uploader.</p>
+        </div>
+        <div class="q-section">
+          <div class="q-section-label">Key Decisions</div>
+          <ul>
+            <li><strong>Resumable uploads:</strong> Large video files need resumable upload. Upload in chunks. Track progress server-side. Resume from last chunk on failure.</li>
+            <li><strong>Transcoding:</strong> Computationally expensive, async. Encode to H.264/H.265 at 1080p, 720p, 480p, 360p. Generate thumbnails. All in parallel with multiple workers.</li>
+            <li><strong>View count:</strong> Don't update DB on every view — too much write load. Batch updates every minute using Redis counter. Consistency can be eventual here.</li>
+            <li><strong>Comments:</strong> Nested comments — use closure table or materialized path pattern. Or denormalize top-level and reply structure separately.</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <!-- RATE LIMITER -->
+    <div class="q-card" id="rate-limiter">
+      <div class="q-header" onclick="toggle(this)">
+        <div class="q-title">Design a Rate Limiter</div>
+        <div style="display:flex;align-items:center;gap:0.75rem;">
+          <div class="q-tags"><span class="tag tag-green">Beginner</span><span class="tag tag-purple">Component</span></div>
+          <span class="toggle-icon">+</span>
+        </div>
+      </div>
+      <div class="q-body">
+        <div class="q-section">
+          <div class="q-section-label">Design</div>
+          <ul>
+            <li><strong>Algorithm:</strong> Token bucket (most practical). Each user gets a bucket of tokens (e.g., 100 req/min). Each request consumes a token. Tokens refill at a fixed rate. Bucket size = max burst.</li>
+            <li><strong>Storage:</strong> Redis. Key: <code>rate_limit:{user_id}</code>. Value: {tokens, last_refill_time}. Atomic update via Lua script (check + update = one atomic operation, prevents race conditions).</li>
+            <li><strong>Response:</strong> If token available → consume token → allow request. Else → return 429 with Retry-After header = time until next token.</li>
+            <li><strong>Distributed:</strong> Multiple API servers all share the same Redis instance. Rate limit enforced globally, not per-server.</li>
+            <li><strong>Config:</strong> Rate limits per API key, per user tier. Store limits in a config DB (so you can change without deployment).</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <!-- KEY VALUE STORE -->
+    <div class="q-card" id="key-value">
+      <div class="q-header" onclick="toggle(this)">
+        <div class="q-title">Design a Distributed Key-Value Store</div>
+        <div style="display:flex;align-items:center;gap:0.75rem;">
+          <div class="q-tags"><span class="tag tag-red">Advanced</span><span class="tag tag-purple">Senior</span></div>
+          <span class="toggle-icon">+</span>
+        </div>
+      </div>
+      <div class="q-body">
+        <div class="q-section">
+          <div class="q-section-label">Design (like a mini DynamoDB)</div>
+          <ul>
+            <li><strong>Data partitioning:</strong> Consistent hashing ring. Keys distributed across nodes. Virtual nodes prevent uneven distribution. Adding/removing nodes only moves ~1/N keys.</li>
+            <li><strong>Replication:</strong> Each key replicated to N nodes (next N clockwise on the ring). Tunable: N=3, W=2, R=2 for quorum (W+R &gt; N = strong consistency).</li>
+            <li><strong>Consistency:</strong> Choose: quorum (strong) or last-write-wins (eventual). Vector clocks for conflict detection. Application-level conflict resolution for true eventual consistency.</li>
+            <li><strong>Failure handling:</strong> Gossip protocol for node health. If a node is down, use sloppy quorum + hinted handoff (another node temporarily holds the data, hands it off when original recovers).</li>
+            <li><strong>Storage engine:</strong> SSTable + LSM Tree (Log-Structured Merge Tree). Writes go to in-memory memtable first (fast). Flushed to sorted SSTables on disk. Reads merge SSTables. Used by Cassandra, LevelDB, RocksDB.</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <div class="nav-bottom">
+      <a href="advanced.html" class="nav-btn">← Advanced</a>
+      <a href="index.html" class="nav-btn primary">Back to Home</a>
+    </div>
+  </main>
+</div>
+
+<script>
+function toggle(header) {
+  const body = header.nextElementSibling;
+  const icon = header.querySelector('.toggle-icon');
+  const isOpen = body.classList.contains('open');
+  document.querySelectorAll('.q-body.open').forEach(b => b.classList.remove('open'));
+  document.querySelectorAll('.toggle-icon').forEach(i => { i.textContent = '+'; i.style.transform = ''; });
+  if (!isOpen) {
+    body.classList.add('open');
+    icon.textContent = '×';
+  }
+}
+</script>
+
+
+<footer style="border-top:1px solid var(--border);padding:1.5rem 2rem;text-align:center;color:var(--dim);font-size:0.8rem;margin-top:2rem;">
+  <p>SystemCraft &nbsp;&middot;&nbsp; <a href="index.html" style="color:var(--muted);text-decoration:none;">Home</a> &nbsp;&middot;&nbsp; <a href="fundamentals.html" style="color:var(--muted);text-decoration:none;">Fundamentals</a> &nbsp;&middot;&nbsp; <a href="components.html" style="color:var(--muted);text-decoration:none;">Components</a> &nbsp;&middot;&nbsp; <a href="patterns.html" style="color:var(--muted);text-decoration:none;">Patterns</a> &nbsp;&middot;&nbsp; <a href="advanced.html" style="color:var(--muted);text-decoration:none;">Advanced</a> &nbsp;&middot;&nbsp; <a href="interview.html" style="color:var(--muted);text-decoration:none;">Interview Prep</a> &nbsp;&middot;&nbsp; <a href="cheatsheet.html" style="color:var(--muted);text-decoration:none;">Cheatsheet</a></p>
+</footer>
+
+</body>
+</html>
